@@ -41,10 +41,19 @@ class ExplanationService:
                 return f"System Explanation: The {rule_name} check resulted in {status} based on {source}."
 
         try:
-            response = self.model.generate_content(
-                prompt,
-                generation_config={"max_output_tokens": 100}
-            )
-            return response.text.strip()
+            try:
+                response = self.model.generate_content(
+                    prompt,
+                    generation_config={"max_output_tokens": 100}
+                )
+                return response.text.strip()
+            except Exception as e:
+                if "404" in str(e):
+                    # Fallback to gemini-pro if 1.5-flash is not available for this API key/region
+                    import google.generativeai as genai
+                    fallback_model = genai.GenerativeModel("gemini-pro")
+                    response = fallback_model.generate_content(prompt, generation_config={"max_output_tokens": 100})
+                    return response.text.strip()
+                raise e
         except Exception as e:
             return f"Error generating explanation: {str(e)}"
