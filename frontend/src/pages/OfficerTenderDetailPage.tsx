@@ -148,7 +148,8 @@ export default function OfficerTenderDetailPage() {
             <tbody className="divide-y divide-slate-100">
               {applications.map((app: any) => (
                 <tr key={app.id} className="hover:bg-slate-50">
-                  <td className="px-6 py-4 font-medium font-mono text-xs">{app.id}</td>
+                  <td className="px-6 py-4 font-medium font-mono text-xs">{app.id.substring(0,8)}...</td>
+                  <td className="px-6 py-4 font-semibold text-slate-800">{app.bidderName || 'Unknown Vendor'}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                       app.status === 'submitted' ? 'bg-amber-100 text-amber-700' :

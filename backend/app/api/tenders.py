@@ -151,18 +151,20 @@ async def get_all_tenders(db: AsyncSession = Depends(get_db)):
 
 @router.get("/{id}/applications")
 async def get_tender_applications(id: uuid.UUID, status: Optional[str] = None, db: AsyncSession = Depends(get_db)):
-    query = select(BidApplication).where(BidApplication.tender_id == id)
+    from app.db.models.bidders import Bidder
+    query = select(BidApplication, Bidder.organization_name).join(Bidder, BidApplication.bidder_id == Bidder.id).where(BidApplication.tender_id == id)
     if status:
         query = query.where(BidApplication.status == status)
         
     result = await db.execute(query)
-    apps = result.scalars().all()
+    apps = result.all()
     
     return [{
-        "id": a.id,
-        "bidderId": a.bidder_id,
-        "status": a.status,
-        "submittedAt": a.submitted_at
+        "id": a[0].id,
+        "bidderId": a[0].bidder_id,
+        "bidderName": a[1],
+        "status": a[0].status,
+        "submittedAt": a[0].submitted_at
     } for a in apps]
 
 @router.get("/open")
