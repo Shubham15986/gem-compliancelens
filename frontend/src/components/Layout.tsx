@@ -18,7 +18,6 @@ export default function Layout({ children }: LayoutProps) {
   const officerNavItems = [
     { name: 'Home', icon: Home, path: '/' },
     { name: 'Dashboard', icon: FileText, path: '/officer/tenders' },
-    { name: 'How to Use', icon: HelpCircle, path: '/officer/guide' },
   ];
 
   const bidderNavItems = [
@@ -26,7 +25,6 @@ export default function Layout({ children }: LayoutProps) {
     { name: 'Browse Tenders', icon: Search, path: '/bidder/tenders' },
     { name: 'My Applications', icon: FileText, path: '/bidder/applications' },
     { name: 'My Vault', icon: UploadCloud, path: '/bidder/submit' },
-    { name: 'How to Use', icon: HelpCircle, path: '/bidder/guide' },
   ];
 
   const navItems = role === 'officer' ? officerNavItems : bidderNavItems;
