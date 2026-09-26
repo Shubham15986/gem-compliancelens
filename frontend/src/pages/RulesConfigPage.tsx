@@ -47,6 +47,12 @@ export default function RulesConfigPage() {
         }
         setEstValue(data.est_value ? data.est_value.toString() : '');
         const savedRules = data.rules || [];
+        if (data.rules) {
+          const fetchedCustom = data.rules
+            .filter((r: any) => r.clauseType.startsWith('custom_'))
+            .map((r: any) => ({ name: r.clauseType.replace('custom_', '').replace(/_/g, ' ') }));
+          setCustomDocs(fetchedCustom);
+        }
         const stateRules = catalog.map(c => {
           const saved = savedRules.find((sr: any) => sr.clauseType === c.type);
           return {
@@ -84,11 +90,18 @@ export default function RulesConfigPage() {
     }
 
     const payload = {
-      rules: rules.filter(r => r.enabled).map(r => ({
-        clauseType: r.type,
-        thresholdValue: r.requiresThreshold ? parseFloat(r.threshold_value) : null,
-        mandatory: r.mandatory
-      }))
+      rules: [
+        ...rules.filter(r => r.enabled).map(r => ({
+          clauseType: r.type,
+          thresholdValue: r.requiresThreshold ? parseFloat(r.threshold_value) : null,
+          mandatory: r.mandatory
+        })),
+        ...customDocs.map(cd => ({
+          clauseType: `custom_${cd.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
+          thresholdValue: null,
+          mandatory: true
+        }))
+      ]
     };
 
     try {
@@ -227,6 +240,58 @@ export default function RulesConfigPage() {
         </div>
       </div>
 
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6 mb-8">
+        <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+          <FileText className="text-blue-600" size={20} /> Custom Required Documents
+        </h2>
+        <p className="text-sm text-slate-500 mb-4">Add specific documents you need vendors to upload (e.g., "Financial Statement 2023"). These will bypass AI checks and go straight to your Manual Review queue.</p>
+        <div className="flex gap-2 mb-4">
+          <input 
+            type="text" 
+            placeholder="Document Name" 
+            value={newCustomDoc}
+            onChange={(e) => setNewCustomDoc(e.target.value)}
+            className="flex-1 border-slate-300 rounded text-sm p-2 border focus:ring-blue-500 focus:border-blue-500"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                if (newCustomDoc.trim()) {
+                  setCustomDocs([...customDocs, {name: newCustomDoc.trim()}]);
+                  setNewCustomDoc('');
+                }
+              }
+            }}
+          />
+          <button 
+            type="button"
+            onClick={() => {
+              if (newCustomDoc.trim()) {
+                setCustomDocs([...customDocs, {name: newCustomDoc.trim()}]);
+                setNewCustomDoc('');
+              }
+            }}
+            className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700 transition"
+          >
+            Add
+          </button>
+        </div>
+        <div className="space-y-2">
+          {customDocs.map((cd, idx) => (
+            <div key={idx} className="flex items-center justify-between bg-slate-50 p-3 rounded border border-slate-100">
+              <span className="font-medium text-slate-700 capitalize">{cd.name}</span>
+              <button 
+                type="button"
+                onClick={() => setCustomDocs(customDocs.filter((_, i) => i !== idx))}
+                className="text-red-500 hover:text-red-700 font-medium text-sm"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+          {customDocs.length === 0 && <div className="text-sm text-slate-400 italic">No custom documents required.</div>}
+        </div>
+      </div>
+      
       <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
         {categories.map((cat, idx) => (
           <div key={cat} className="border-b border-slate-200 last:border-0">
