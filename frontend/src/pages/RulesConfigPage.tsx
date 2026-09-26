@@ -29,6 +29,8 @@ export default function RulesConfigPage() {
   const [privatePassword, setPrivatePassword] = useState('');
   const [closingDate, setClosingDate] = useState('');
   const [estValue, setEstValue] = useState('');
+  const [customDocs, setCustomDocs] = useState<{name: string}[]>([]);
+  const [newCustomDoc, setNewCustomDoc] = useState('');
 
   useEffect(() => {
     if (!tenderId) return;
