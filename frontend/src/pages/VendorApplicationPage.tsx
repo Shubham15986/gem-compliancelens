@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DocumentUploader from '../components/DocumentUploader';
-import { Upload, CheckCircle2, AlertCircle, Play, FileText, Loader2, MessageSquare } from 'lucide-react';
+import { Upload, CheckCircle2, AlertCircle, Play, FileText, Loader2, MessageSquare, X, ShieldAlert } from "lucide-react";
 
 export default function VendorApplicationPage() {
   const { appId } = useParams();
