@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, Save, ArrowLeft } from 'lucide-react';
+import { Settings, Save, ArrowLeft, FileText } from "lucide-react";
 import { toast, Toaster } from 'sonner';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
