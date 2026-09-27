@@ -250,12 +250,19 @@ async def delete_document(id: str, bidderId: str, db: AsyncSession = Depends(get
     if str(doc.bidder_id) != bidderId:
         raise HTTPException(status_code=403, detail="Access denied")
         
+    from sqlalchemy import delete
+    from app.db.models.authenticity import DocumentAuthenticityCheck
+    from app.db.models.bids import BidApplicationDocument
+    
+    await db.execute(delete(DocumentAuthenticityCheck).where(DocumentAuthenticityCheck.document_id == doc.id))
+    await db.execute(delete(BidApplicationDocument).where(BidApplicationDocument.document_id == doc.id))
+    
     await db.delete(doc)
     
     from app.services.audit_service import AuditService
     await AuditService.log_event(
         db, 'document_deleted', uuid.UUID(bidderId), 
-        {"document_id": id, "doc_type": doc.doc_type}
+        {"document_id": id, "doc_type": str(doc.doc_type)}
     )
     
     await db.commit()
