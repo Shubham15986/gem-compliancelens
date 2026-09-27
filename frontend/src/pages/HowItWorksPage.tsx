@@ -29,6 +29,15 @@ export default function HowItWorksPage() {
     navigate(path);
   };
 
+  const scrollTo = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 96; // 96px offset for sticky header
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
   const BidderJourney = [
     { id: 1, title: 'Register & Log In', desc: 'Securely authenticate as a vendor on the platform.', detail: 'Vendors can seamlessly sign up to the portal. Uses secure JWT authentication simulating standard government SSO.', icon: ShieldCheck, status: 'Live' },
     { id: 2, title: 'Upload Tender Documents', desc: 'Submit PAN, GST, ISO certificates, and other required proofs.', detail: 'Documents are instantly processed. Features a drag-and-drop interface with immediate client-side validation for file sizes and formats.', icon: UploadCloud, status: 'Live' },
@@ -80,13 +89,13 @@ export default function HowItWorksPage() {
           </a>
           
           <nav className="hidden md:flex items-center gap-8">
-            <a className="text-ink font-title-sm text-title-sm font-semibold border-b-2 border-ink pb-1 flex items-center gap-1" href="#journey">
+            <a className="text-ink font-title-sm text-title-sm font-semibold border-b-2 border-ink pb-1 flex items-center gap-1 cursor-pointer" onClick={(e) => scrollTo(e, 'journey')}>
               Journey
             </a>
-            <a className="text-ink-muted font-title-sm text-title-sm font-medium hover:text-ink transition-colors duration-150 flex items-center gap-1" href="#features">
+            <a className="text-ink-muted font-title-sm text-title-sm font-medium hover:text-ink transition-colors duration-150 flex items-center gap-1 cursor-pointer" onClick={(e) => scrollTo(e, 'features')}>
               How It Works
             </a>
-            <a className="text-ink-muted font-title-sm text-title-sm font-medium hover:text-ink transition-colors duration-150 flex items-center gap-1" href="#sih-requirements" onClick={(e) => handleNav(e, '/sih-compliance')}>
+            <a className="text-ink-muted font-title-sm text-title-sm font-medium hover:text-ink transition-colors duration-150 flex items-center gap-1 cursor-pointer" onClick={(e) => handleNav(e, '/sih-compliance')}>
               SIH Requirements
             </a>
           </nav>
