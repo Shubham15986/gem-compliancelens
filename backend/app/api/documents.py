@@ -243,30 +243,39 @@ async def confirm_document(id: str, req: DocumentConfirmRequest, db: AsyncSessio
 
 @router.delete("/{id}")
 async def delete_document(id: str, bidderId: str, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(BidderDocument).filter(BidderDocument.id == uuid.UUID(id)))
-    doc = result.scalars().first()
-    if not doc:
-        raise HTTPException(status_code=404, detail="Document not found")
-    if str(doc.bidder_id) != bidderId:
-        raise HTTPException(status_code=403, detail="Access denied")
+    try:
+        result = await db.execute(select(BidderDocument).filter(BidderDocument.id == uuid.UUID(id)))
+        doc = result.scalars().first()
+        if not doc:
+            raise HTTPException(status_code=404, detail="Document not found")
+        if str(doc.bidder_id) != bidderId:
+            raise HTTPException(status_code=403, detail="Access denied")
+            
+        from sqlalchemy import delete
+        from app.db.models.authenticity import DocumentAuthenticityCheck
+        from app.db.models.bids import BidApplicationDocument
         
-    from sqlalchemy import delete
-    from app.db.models.authenticity import DocumentAuthenticityCheck
-    from app.db.models.bids import BidApplicationDocument
-    
-    await db.execute(delete(DocumentAuthenticityCheck).where(DocumentAuthenticityCheck.document_id == doc.id))
-    await db.execute(delete(BidApplicationDocument).where(BidApplicationDocument.document_id == doc.id))
-    
-    await db.delete(doc)
-    
-    from app.services.audit_service import AuditService
-    await AuditService.log_event(
-        db, 'document_deleted', uuid.UUID(bidderId), 
-        {"document_id": id, "doc_type": str(doc.doc_type)}
-    )
-    
-    await db.commit()
-    return {"status": "deleted"}
+        await db.execute(delete(DocumentAuthenticityCheck).where(DocumentAuthenticityCheck.document_id == doc.id))
+        await db.execute(delete(BidApplicationDocument).where(BidApplicationDocument.document_id == doc.id))
+        
+        await db.delete(doc)
+        
+        from app.services.audit_service import AuditService
+        # Use 'document_correction' instead of 'document_deleted' because 'document_deleted' 
+        # is not in the Postgres event_type_enum and causes a 500 DB crash!
+        await AuditService.log_event(
+            db, 'document_correction', uuid.UUID(bidderId), 
+            {"document_id": id, "action": "deleted", "doc_type": str(doc.doc_type)}
+        )
+        
+        await db.commit()
+        return {"status": "deleted"}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        import traceback
+        err_msg = traceback.format_exc()
+        raise HTTPException(status_code=500, detail=str(err_msg))
 
 from pydantic import BaseModel
 
