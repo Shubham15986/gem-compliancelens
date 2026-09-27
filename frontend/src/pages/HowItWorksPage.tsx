@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   ShieldCheck, UploadCloud, FileSearch, Scale, Bot, CheckCircle, 
   Database, Fingerprint, FileLock2, Search, Zap, Clock, ShieldAlert,
@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function HowItWorksPage() {
   const navigate = useNavigate();
@@ -15,6 +16,29 @@ export default function HowItWorksPage() {
   const userStr = localStorage.getItem('user');
   const user = userStr ? JSON.parse(userStr) : null;
   const role = user?.role;
+
+  // --- Framer Motion Variants ---
+  const fadeUp = {
+    hidden: { opacity: 0, y: 30 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+  };
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15 }
+    }
+  };
+  const staggerItem = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+  };
+
+  const journeyRef = useRef(null);
+  const { scrollYProgress: journeyProgress } = useScroll({
+    target: journeyRef,
+    offset: ["start center", "end center"]
+  });
 
   const toggleStep = (idx: number) => {
     if (expandedSteps.includes(idx)) {
@@ -126,21 +150,21 @@ export default function HowItWorksPage() {
 
       {/* 2. HERO SECTION */}
       <section className="relative pt-16 pb-20 lg:pt-24 lg:pb-32 px-6 lg:px-10 overflow-hidden">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-surface-container border border-ink/10 mb-8 shadow-editorial-subtle">
+        <motion.div initial="hidden" animate="show" variants={staggerContainer} className="max-w-5xl mx-auto text-center">
+          <motion.div variants={fadeUp} className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-surface-container border border-ink/10 mb-8 shadow-editorial-subtle">
             <span className="w-2 h-2 rounded-full bg-teal-accent animate-pulse"></span>
             <span className="font-label-md text-label-md text-ink uppercase tracking-wider">CAG Audit &amp; GeM GFR-Compliant Engine v4.2</span>
-          </div>
+          </motion.div>
           
-          <h1 className="font-display text-display-mobile lg:text-display text-ink tracking-tight max-w-4xl mx-auto mb-6">
+          <motion.h1 variants={fadeUp} className="font-display text-display-mobile lg:text-display text-ink tracking-tight max-w-4xl mx-auto mb-6">
             Government procurement forensics, solved together.
-          </h1>
+          </motion.h1>
           
-          <p className="font-body-lg text-body-lg text-ink-muted max-w-2xl mx-auto mb-10 leading-relaxed">
+          <motion.p variants={fadeUp} className="font-body-lg text-body-lg text-ink-muted max-w-2xl mx-auto mb-10 leading-relaxed">
             GemOne turns complex tender documents, GST filings, and statutory checks into instant, CAG-defensible compliance verdicts for SIH.
-          </p>
+          </motion.p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             {!user ? (
               <button onClick={() => navigate('/login')} className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-ink hover:bg-ink-dark text-cream font-title-md text-title-md font-bold shadow-editorial-elevated active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-2">
                 <span>Try GemOne free</span>
@@ -156,9 +180,9 @@ export default function HowItWorksPage() {
               <span className="material-symbols-outlined text-ink-muted">rule</span>
               <span>SIH Requirements</span>
             </button>
-          </div>
+          </motion.div>
 
-          <div className="relative mx-auto max-w-5xl rounded-2xl bg-white border border-ink/10 p-4 lg:p-6 shadow-editorial-elevated text-left">
+          <motion.div variants={fadeUp} className="relative mx-auto max-w-5xl rounded-2xl bg-white border border-ink/10 p-4 lg:p-6 shadow-editorial-elevated text-left">
             <div className="flex items-center justify-between border-b border-ink/10 pb-4 mb-5">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-pink-accent/80"></span>
@@ -233,53 +257,53 @@ export default function HowItWorksPage() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* 3. TRUST BAR */}
       <section className="border-y border-ink/10 bg-cream py-8 px-6 lg:px-10">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="font-label-md text-label-md text-ink-muted uppercase tracking-wider shrink-0 text-center md:text-left">
+        <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer} className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <motion.p variants={fadeUp} className="font-label-md text-label-md text-ink-muted uppercase tracking-wider shrink-0 text-center md:text-left">
             Procurement Defensibility Engineered Alongside
-          </p>
-          <div className="flex flex-wrap items-center justify-center md:justify-end gap-8 lg:gap-12 opacity-85">
-            <div className="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-ink tracking-tight">
+          </motion.p>
+          <motion.div variants={staggerContainer} className="flex flex-wrap items-center justify-center md:justify-end gap-8 lg:gap-12 opacity-85">
+            <motion.div variants={staggerItem} className="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-ink tracking-tight">
               <span className="material-symbols-outlined text-ink">shopping_cart</span>
               <span>GeM e-Marketplace</span>
-            </div>
-            <div className="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-ink tracking-tight">
+            </motion.div>
+            <motion.div variants={staggerItem} className="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-ink tracking-tight">
               <span className="material-symbols-outlined text-ink">shield</span>
               <span>Min. of Defence</span>
-            </div>
-            <div className="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-ink tracking-tight">
+            </motion.div>
+            <motion.div variants={staggerItem} className="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-ink tracking-tight">
               <span className="material-symbols-outlined text-ink">terminal</span>
               <span>NICSI</span>
-            </div>
-            <div className="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-ink tracking-tight">
+            </motion.div>
+            <motion.div variants={staggerItem} className="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-ink tracking-tight">
               <span className="material-symbols-outlined text-ink">fact_check</span>
               <span>STQC India</span>
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* 4. THE JOURNEY SECTION */}
-      <section id="journey" className="py-20 lg:py-28 px-6 lg:px-10 bg-cream max-w-7xl mx-auto scroll-mt-24">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink/5 text-ink font-label-md text-label-md font-bold mb-4">
+      <section id="journey" ref={journeyRef} className="py-20 lg:py-28 px-6 lg:px-10 bg-cream max-w-7xl mx-auto scroll-mt-24">
+        <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer} className="text-center max-w-3xl mx-auto mb-16">
+          <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink/5 text-ink font-label-md text-label-md font-bold mb-4">
             <span className="material-symbols-outlined text-sm">route</span>
             Interactive Walkthrough
-          </div>
-          <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-ink font-bold tracking-tight mb-4">
+          </motion.div>
+          <motion.h2 variants={fadeUp} className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-ink font-bold tracking-tight mb-4">
             Experience the workflow.
-          </h2>
-          <p className="font-body-lg text-body-lg text-ink-muted">
+          </motion.h2>
+          <motion.p variants={fadeUp} className="font-body-lg text-body-lg text-ink-muted">
             See how GemOne drastically simplifies the procurement lifecycle for both bidders and government officers.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        <div className="flex justify-center mb-12">
+        <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={fadeUp} className="flex justify-center mb-12">
           <div className="inline-flex bg-surface-container rounded-full p-1 border border-ink/10 shadow-editorial-subtle">
             <button
               onClick={() => { setActiveTab('bidder'); setExpandedSteps([0]); }}
@@ -300,17 +324,20 @@ export default function HowItWorksPage() {
               Officer Journey
             </button>
           </div>
-        </div>
+        </motion.div>
 
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 relative">
-          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-ink/10 -translate-x-1/2" />
+          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-ink/10 -translate-x-1/2 overflow-hidden">
+            <motion.div className="w-full bg-teal-accent origin-top" style={{ scaleY: journeyProgress, height: "100%" }} />
+          </div>
           
           {journey.map((step, idx) => {
             const isExpanded = expandedSteps.includes(idx);
             const isLeft = idx % 2 === 0;
             return (
-              <div 
+              <motion.div 
                 key={idx} 
+                initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp}
                 className={cn(
                   "bg-white border border-ink/10 p-6 rounded-2xl shadow-editorial-subtle cursor-pointer hover:border-teal-accent/40 hover:shadow-editorial-elevated transition-all group relative z-10",
                   isLeft ? "md:col-start-1" : "md:col-start-2 mt-0 md:mt-12"
@@ -339,13 +366,13 @@ export default function HowItWorksPage() {
                 </p>
                 
                 {isExpanded && (
-                  <div className="mt-4 pt-4 border-t border-ink/5 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-4 pt-4 border-t border-ink/5">
                     <p className="font-body-sm text-body-sm text-ink leading-relaxed bg-surface-container p-3 rounded-lg border border-ink/5">
                       {step.detail}
                     </p>
-                  </div>
+                  </motion.div>
                 )}
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -354,33 +381,33 @@ export default function HowItWorksPage() {
       {/* 5. ALTERNATING FEATURE BLOCKS (How It Works) */}
       <section className="py-20 lg:py-28 px-6 lg:px-10 max-w-7xl mx-auto space-y-24 scroll-mt-24" id="features">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-accent/15 text-teal-accent font-label-md text-label-md font-bold">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="lg:col-span-6 space-y-6">
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-accent/15 text-teal-accent font-label-md text-label-md font-bold">
               <span className="material-symbols-outlined text-sm">memory</span>
               Deterministic Extraction Pipeline
-            </div>
-            <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-ink font-bold tracking-tight">
+            </motion.div>
+            <motion.h2 variants={fadeUp} className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-ink font-bold tracking-tight">
               Extract statutory truth with zero hallucinations.
-            </h2>
-            <p className="font-body-lg text-body-lg text-ink-muted leading-relaxed">
+            </motion.h2>
+            <motion.p variants={fadeUp} className="font-body-lg text-body-lg text-ink-muted leading-relaxed">
               Generic LLMs fabricate turnover and distort compliance dates. GemOne’s Abstract Syntax Tree (AST) engine cross-checks GST returns, balance sheet notes, and GeM eligibility rules with mathematical determinism.
-            </p>
-            <ul className="space-y-3 pt-2">
-              <li className="flex items-center gap-3 font-title-sm text-title-sm text-ink">
+            </motion.p>
+            <motion.ul variants={staggerContainer} className="space-y-3 pt-2">
+              <motion.li variants={staggerItem} className="flex items-center gap-3 font-title-sm text-title-sm text-ink">
                 <span className="w-5 h-5 rounded-full bg-teal-accent/20 text-teal-accent flex items-center justify-center font-bold text-xs">✓</span>
                 Automated GSTIN 2B reconciliation with live GST portal integration
-              </li>
-              <li className="flex items-center gap-3 font-title-sm text-title-sm text-ink">
+              </motion.li>
+              <motion.li variants={staggerItem} className="flex items-center gap-3 font-title-sm text-title-sm text-ink">
                 <span className="w-5 h-5 rounded-full bg-teal-accent/20 text-teal-accent flex items-center justify-center font-bold text-xs">✓</span>
                 Class-3 DSC certificate path and revoked cert checks
-              </li>
-              <li className="flex items-center gap-3 font-title-sm text-title-sm text-ink">
+              </motion.li>
+              <motion.li variants={staggerItem} className="flex items-center gap-3 font-title-sm text-title-sm text-ink">
                 <span className="w-5 h-5 rounded-full bg-teal-accent/20 text-teal-accent flex items-center justify-center font-bold text-xs">✓</span>
                 Strict Clause 144(xi) beneficial ownership parsing
-              </li>
-            </ul>
-          </div>
-          <div className="lg:col-span-6 bg-white rounded-2xl border border-ink/10 p-6 shadow-editorial-elevated">
+              </motion.li>
+            </motion.ul>
+          </motion.div>
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="lg:col-span-6 bg-white rounded-2xl border border-ink/10 p-6 shadow-editorial-elevated">
             <div className="flex items-center justify-between border-b border-ink/10 pb-4 mb-4">
               <div>
                 <span className="font-title-sm text-title-sm text-ink font-bold block">Tax &amp; Statutory Compliance Dossier</span>
@@ -417,15 +444,15 @@ export default function HowItWorksPage() {
                   <span className="font-label-md text-label-md font-bold text-ink">₹84.50 Cr / req ₹50.00 Cr</span>
                 </div>
                 <div className="w-full bg-outline-variant/30 h-2 rounded-full overflow-hidden">
-                  <div className="bg-teal-accent h-full w-[100%] max-w-full"></div>
+                  <motion.div initial={{ width: 0 }} whileInView={{ width: "100%" }} transition={{ duration: 1, delay: 0.5 }} className="bg-teal-accent h-full max-w-full"></motion.div>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          <div className="lg:col-span-6 order-2 lg:order-1 bg-white rounded-2xl border border-ink/10 p-6 shadow-editorial-elevated">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="lg:col-span-6 order-2 lg:order-1 bg-white rounded-2xl border border-ink/10 p-6 shadow-editorial-elevated">
             <div className="flex items-center justify-between border-b border-ink/10 pb-4 mb-4">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-pink-accent">document_scanner</span>
@@ -456,51 +483,52 @@ export default function HowItWorksPage() {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="lg:col-span-6 order-1 lg:order-2 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-coral-accent/15 text-coral-accent font-label-md text-label-md font-bold">
+          </motion.div>
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="lg:col-span-6 order-1 lg:order-2 space-y-6">
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-coral-accent/15 text-coral-accent font-label-md text-label-md font-bold">
               <span className="material-symbols-outlined text-sm">fingerprint</span>
               Pixel-Level Document Forensics
-            </div>
-            <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-ink font-bold tracking-tight">
+            </motion.div>
+            <motion.h2 variants={fadeUp} className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-ink font-bold tracking-tight">
               Catch document forgery before bids open.
-            </h2>
-            <p className="font-body-lg text-body-lg text-ink-muted leading-relaxed">
+            </motion.h2>
+            <motion.p variants={fadeUp} className="font-body-lg text-body-lg text-ink-muted leading-relaxed">
               Tender mafias routinely modify dates on OEM certificates, forge CA net worth seals, and splice balance sheets. GemOne runs sub-pixel error-level analysis, PDF metadata chronology auditing, and ICAI UDIN verification instantly.
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
         </div>
       </section>
 
       {/* CURVE 1: LIGHT TO DARK */}
-      <div className="w-full overflow-hidden leading-none -mb-1">
+      <div className="w-full overflow-hidden leading-none -mb-1 relative z-10">
         <svg className="block w-full h-16 md:h-24 text-indigo-dark fill-current" preserveAspectRatio="none" viewBox="0 0 1440 120">
           <path d="M0,32L80,42.7C160,53,320,75,480,80C640,85,800,75,960,58.7C1120,43,1280,21,1360,10.7L1440,0L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
         </svg>
       </div>
 
       {/* DARK SECTION 1: GITHUB ISSUES ROADMAP */}
-      <section className="bg-indigo-dark text-white py-20 lg:py-28 px-6 lg:px-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+      <section className="relative bg-indigo-dark text-white py-20 lg:py-28 px-6 lg:px-10 overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent pointer-events-none" />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer} className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-accent font-label-md text-label-md font-bold mb-4">
+              <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-accent font-label-md text-label-md font-bold mb-4">
                 <span className="material-symbols-outlined text-sm">build</span>
                 Post-SIH Tracker
-              </div>
-              <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold tracking-tight text-white">
+              </motion.div>
+              <motion.h2 variants={fadeUp} className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold tracking-tight text-white">
                 Future Upgrades (Roadmap)
-              </h2>
+              </motion.h2>
             </div>
-            <a href="https://github.com/Shubham15986/gem-compliancelens/issues" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-title-sm text-title-sm font-bold shadow-editorial-subtle transition-all duration-150 flex items-center gap-2">
+            <motion.a variants={fadeUp} href="https://github.com/Shubham15986/gem-compliancelens/issues" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-title-sm text-title-sm font-bold shadow-editorial-subtle transition-all duration-150 flex items-center gap-2">
               View Issue Tracker
               <span className="material-symbols-outlined text-sm">open_in_new</span>
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {Roadmap.map((item, idx) => (
-              <div key={idx} className="bg-primary-container/80 border border-white/10 p-6 rounded-2xl hover:border-teal-accent/50 transition-colors">
+              <motion.div variants={staggerItem} key={idx} className="bg-primary-container/80 border border-white/10 p-6 rounded-2xl hover:border-teal-accent/50 transition-colors">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-accent">
                     <item.icon size={20} />
@@ -514,14 +542,14 @@ export default function HowItWorksPage() {
                   <span className="text-coral-accent font-label-md text-label-md uppercase tracking-wider block mb-1">Limitation / Blocker</span>
                   <p className="text-on-primary-container font-body-sm text-body-sm">{item.limitation}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* CURVE 2: DARK TO LIGHT */}
-      <div className="w-full overflow-hidden leading-none -mt-1 -mb-1 bg-indigo-dark">
+      <div className="w-full overflow-hidden leading-none -mt-1 -mb-1 bg-indigo-dark relative z-10">
         <svg className="block w-full h-16 md:h-24 text-cream fill-current" preserveAspectRatio="none" viewBox="0 0 1440 120">
           <path d="M0,64L80,69.3C160,75,320,85,480,74.7C640,64,800,32,960,26.7C1120,21,1280,43,1360,53.3L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
         </svg>
@@ -530,16 +558,16 @@ export default function HowItWorksPage() {
       {/* LIGHT SECTION 1: 3-STATE VERDICT MACHINE & VAULT */}
       <section className="bg-cream py-20 lg:py-28 px-6 lg:px-10">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-ink tracking-tight mb-4">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer} className="text-center max-w-3xl mx-auto mb-16">
+            <motion.h2 variants={fadeUp} className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-ink tracking-tight mb-4">
               The 3-state verdict machine.
-            </h2>
-            <p className="font-body-lg text-body-lg text-ink-muted">
+            </motion.h2>
+            <motion.p variants={fadeUp} className="font-body-lg text-body-lg text-ink-muted">
               Ambiguity creates legal disputes and stalled public tenders. GemOne provides an unmistakable tripartite classification for every bidder requirement, backed by an immutable tender vault.
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
-          <div className="bg-white rounded-2xl border border-ink/10 shadow-editorial-elevated overflow-hidden mb-20 max-w-5xl mx-auto">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={fadeUp} className="bg-white rounded-2xl border border-ink/10 shadow-editorial-elevated overflow-hidden mb-20 max-w-5xl mx-auto">
             <div className="p-6 border-b border-ink/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 className="font-title-lg text-title-lg font-bold text-ink">Automated Procurement Evaluation Ledger</h3>
@@ -597,10 +625,10 @@ export default function HowItWorksPage() {
                 </tbody>
               </table>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <div className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <motion.div variants={staggerItem} className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
               <div className="w-10 h-10 rounded-xl bg-teal-accent/15 text-teal-accent flex items-center justify-center mb-4">
                 <span className="material-symbols-outlined">hub</span>
               </div>
@@ -608,8 +636,8 @@ export default function HowItWorksPage() {
               <p className="font-body-md text-body-md text-ink-muted">
                 All submitted PAN, GSTIN, and compliance documents are stored in an encrypted vault, guaranteeing zero data egress beyond sovereign soil.
               </p>
-            </div>
-            <div className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
+            </motion.div>
+            <motion.div variants={staggerItem} className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
               <div className="w-10 h-10 rounded-xl bg-coral-accent/15 text-coral-accent flex items-center justify-center mb-4">
                 <span className="material-symbols-outlined">lock</span>
               </div>
@@ -617,8 +645,8 @@ export default function HowItWorksPage() {
               <p className="font-body-md text-body-md text-ink-muted">
                 Every action is logged into an immutable cryptographic hash chain. If a malicious insider alters a record, the SHA-256 chain breaks instantly.
               </p>
-            </div>
-            <div className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
+            </motion.div>
+            <motion.div variants={staggerItem} className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
               <div className="w-10 h-10 rounded-xl bg-pink-accent/15 text-pink-accent flex items-center justify-center mb-4">
                 <span className="material-symbols-outlined">rule</span>
               </div>
@@ -626,8 +654,8 @@ export default function HowItWorksPage() {
               <p className="font-body-md text-body-md text-ink-muted">
                 Ambiguous edge cases are never auto-rejected. If the AI cannot read a blurry document after 3 strikes, it seamlessly degrades to the manual review queue.
               </p>
-            </div>
-            <div className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
+            </motion.div>
+            <motion.div variants={staggerItem} className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
               <div className="w-10 h-10 rounded-xl bg-sky-accent/15 text-sky-accent flex items-center justify-center mb-4">
                 <span className="material-symbols-outlined">sync</span>
               </div>
@@ -635,36 +663,37 @@ export default function HowItWorksPage() {
               <p className="font-body-md text-body-md text-ink-muted">
                 Integrated with GSTN, MCA21, CBDT, and ICAI UDIN registers directly over MeitY-authorized secure gateways.
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* CURVE 3: LIGHT TO DARK */}
-      <div className="w-full overflow-hidden leading-none -mb-1">
+      <div className="w-full overflow-hidden leading-none -mb-1 relative z-10">
         <svg className="block w-full h-16 md:h-24 text-indigo-dark fill-current" preserveAspectRatio="none" viewBox="0 0 1440 120">
           <path d="M0,16L80,26.7C160,37,320,59,480,69.3C640,80,800,80,960,69.3C1120,59,1280,37,1360,26.7L1440,16L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
         </svg>
       </div>
 
       {/* DARK SECTION 2: ECONOMIC IMPACT & ROI */}
-      <section className="bg-indigo-dark text-white py-20 lg:py-28 px-6 lg:px-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+      <section className="relative bg-indigo-dark text-white py-20 lg:py-28 px-6 lg:px-10 overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent pointer-events-none" />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer} className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-accent font-label-md text-label-md font-bold mb-4">
+              <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-accent font-label-md text-label-md font-bold mb-4">
                 <span className="material-symbols-outlined text-sm">trending_down</span>
                 SIH 26100 Economic Impact
-              </div>
-              <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold tracking-tight text-white">
+              </motion.div>
+              <motion.h2 variants={fadeUp} className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold tracking-tight text-white">
                 Return On Investment (ROI)
-              </h2>
+              </motion.h2>
             </div>
-          </div>
+          </motion.div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {RoiData.map((item, idx) => (
-              <div key={idx} className="bg-primary-container/80 border border-white/10 p-6 rounded-2xl hover:border-teal-accent/50 transition-colors">
+              <motion.div variants={staggerItem} key={idx} className="bg-primary-container/80 border border-white/10 p-6 rounded-2xl hover:border-teal-accent/50 transition-colors">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-accent">
                     <item.icon size={20} />
@@ -678,14 +707,14 @@ export default function HowItWorksPage() {
                   <span className="text-coral-accent font-label-md text-label-md uppercase tracking-wider block mb-1">Financial Basis</span>
                   <p className="text-on-primary-container font-body-sm text-body-sm">{item.limitation}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* CURVE 4: DARK TO LIGHT */}
-      <div className="w-full overflow-hidden leading-none -mt-1 -mb-1 bg-indigo-dark">
+      <div className="w-full overflow-hidden leading-none -mt-1 -mb-1 bg-indigo-dark relative z-10">
         <svg className="block w-full h-16 md:h-24 text-cream fill-current" preserveAspectRatio="none" viewBox="0 0 1440 120">
           <path d="M0,48L80,58.7C160,69,320,91,480,85.3C640,80,800,48,960,37.3C1120,27,1280,37,1360,42.7L1440,48L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
         </svg>
@@ -694,73 +723,74 @@ export default function HowItWorksPage() {
       {/* LIGHT SECTION 2: SECURITY BADGES & CALL TO ACTION */}
       <section className="bg-cream py-20 lg:py-28 px-6 lg:px-10">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink/5 text-ink font-label-md text-label-md font-bold mb-4">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer} className="max-w-3xl mx-auto mb-16">
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink/5 text-ink font-label-md text-label-md font-bold mb-4">
               <span className="material-symbols-outlined text-sm">verified</span>
               Verified Sovereign Accreditations
-            </div>
-            <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-ink tracking-tight mb-4">
+            </motion.div>
+            <motion.h2 variants={fadeUp} className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-ink tracking-tight mb-4">
               Uncompromising security for national procurement.
-            </h2>
-            <p className="font-body-lg text-body-lg text-ink-muted">
+            </motion.h2>
+            <motion.p variants={fadeUp} className="font-body-lg text-body-lg text-ink-muted">
               Audited and certified against the highest defense-grade benchmarks for public sector compliance.
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
-            <div className="bg-white p-8 rounded-2xl border border-ink/10 shadow-editorial-subtle flex flex-col items-center text-center">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
+            <motion.div variants={staggerItem} className="bg-white p-8 rounded-2xl border border-ink/10 shadow-editorial-subtle flex flex-col items-center text-center">
               <div className="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center text-ink mb-4">
                 <span className="material-symbols-outlined text-3xl text-teal-accent">military_tech</span>
               </div>
               <h4 className="font-title-md text-title-md font-bold text-ink mb-1">ISO 27001</h4>
               <span className="font-label-sm text-label-sm text-ink-muted mb-2">Certified ISMS</span>
               <p className="font-body-sm text-body-sm text-ink-muted">End-to-end information security protocols audited annually.</p>
-            </div>
-            <div className="bg-white p-8 rounded-2xl border border-ink/10 shadow-editorial-subtle flex flex-col items-center text-center">
+            </motion.div>
+            <motion.div variants={staggerItem} className="bg-white p-8 rounded-2xl border border-ink/10 shadow-editorial-subtle flex flex-col items-center text-center">
               <div className="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center text-ink mb-4">
                 <span className="material-symbols-outlined text-3xl text-coral-accent">policy</span>
               </div>
               <h4 className="font-title-md text-title-md font-bold text-ink mb-1">SOC 2 Type II</h4>
               <span className="font-label-sm text-label-sm text-ink-muted mb-2">Continuous Attestation</span>
               <p className="font-body-sm text-body-sm text-ink-muted">Confidentiality, availability, and processing integrity assured.</p>
-            </div>
-            <div className="bg-white p-8 rounded-2xl border border-ink/10 shadow-editorial-subtle flex flex-col items-center text-center">
+            </motion.div>
+            <motion.div variants={staggerItem} className="bg-white p-8 rounded-2xl border border-ink/10 shadow-editorial-subtle flex flex-col items-center text-center">
               <div className="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center text-ink mb-4">
                 <span className="material-symbols-outlined text-3xl text-pink-accent">gavel</span>
               </div>
               <h4 className="font-title-md text-title-md font-bold text-ink mb-1">GFR 2017 Clause 144(xi)</h4>
               <span className="font-label-sm text-label-sm text-ink-muted mb-2">Land Border Compliance</span>
               <p className="font-body-sm text-body-sm text-ink-muted">Automated verification of sovereign beneficial ownership mandates.</p>
-            </div>
-            <div className="bg-white p-8 rounded-2xl border border-ink/10 shadow-editorial-subtle flex flex-col items-center text-center">
+            </motion.div>
+            <motion.div variants={staggerItem} className="bg-white p-8 rounded-2xl border border-ink/10 shadow-editorial-subtle flex flex-col items-center text-center">
               <div className="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center text-ink mb-4">
                 <span className="material-symbols-outlined text-3xl text-sky-accent">cloud_done</span>
               </div>
               <h4 className="font-title-md text-title-md font-bold text-ink mb-1">MeitY Empanelled</h4>
               <span className="font-label-sm text-label-sm text-ink-muted mb-2">Govt of India Cloud</span>
               <p className="font-body-sm text-body-sm text-ink-muted">Empanelled for critical and sensitive central procurement data hosting.</p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* 7. FOOTER */}
       <footer className="w-full bg-ink text-cream border-t border-outline-variant/20">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-16">
-          <div className="text-center mb-16">
-            <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-cream tracking-tight mb-8">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer} className="text-center mb-16">
+            <motion.h2 variants={fadeUp} className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-cream tracking-tight mb-8">
               Ready to experience GemOne?
-            </h2>
+            </motion.h2>
             {user ? (
-              <button 
+              <motion.button 
+                variants={fadeUp}
                 onClick={() => navigate(`/${role}/tenders`)}
                 className="px-8 py-3.5 rounded-full bg-teal-accent hover:bg-teal-accent/90 text-ink font-title-md text-title-md font-bold shadow-editorial-elevated active:scale-[0.98] transition-all duration-150 inline-flex items-center gap-2"
               >
                 Go to Dashboard
                 <span className="material-symbols-outlined text-ink">arrow_forward</span>
-              </button>
+              </motion.button>
             ) : (
-              <div className="flex items-center justify-center gap-4">
+              <motion.div variants={fadeUp} className="flex items-center justify-center gap-4">
                 <button 
                   onClick={() => navigate('/login')}
                   className="px-8 py-3.5 rounded-full bg-surface-container/10 hover:bg-surface-container/20 text-cream font-title-md text-title-md font-semibold border border-white/20 shadow-editorial-subtle transition-all duration-150"
@@ -773,9 +803,9 @@ export default function HowItWorksPage() {
                 >
                   Register
                 </button>
-              </div>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
           
           <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 font-body-sm text-body-sm text-on-primary-container">
             <div>
