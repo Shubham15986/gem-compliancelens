@@ -12,7 +12,7 @@ import VendorTendersPage from './pages/VendorTendersPage';
 import VendorApplicationsListPage from "./pages/VendorApplicationsListPage";
 import VendorApplicationPage from './pages/VendorApplicationPage';
 import NotificationsPage from "./pages/NotificationsPage";
-import HowItWorksPage from './pages/HowItWorksPage';
+import LandingPage from './pages/LandingPage';
 import SIHCompliancePage from './pages/SIHCompliancePage';
 
 // Protect routes based on role
@@ -37,7 +37,7 @@ function AppContent() {
       {isStandalonePage ? (
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<HowItWorksPage />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/sih-compliance" element={<SIHCompliancePage />} />
           <Route path="/how-it-works" element={<Navigate to="/" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
