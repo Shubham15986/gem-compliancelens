@@ -7,6 +7,22 @@ export default {
   theme: {
     extend: {
       colors: {
+        // App functional variables mapped to Stitch
+        brand: '#15023f',
+        brandHover: '#241454',
+        surface: '#FFFFFF',
+        background: '#FDF3E4',
+        border: '#cac4d0',
+        compliantBg: '#e6f8f6',
+        compliantText: '#14B8A6',
+        needsReviewBg: '#fef1e5',
+        needsReviewText: '#F2994A',
+        nonCompliantBg: '#ffdad6',
+        nonCompliantText: '#ba1a1a',
+        textPrimary: '#2A1B54',
+        textSecondary: '#4C3B7C',
+
+        // Stitch tokens from HTML
         "surface-tint": "#645591",
         "primary": "#15023f",
         "on-primary-fixed-variant": "#4c3d77",
@@ -23,7 +39,6 @@ export default {
         "outline": "#797580",
         "primary-container": "#2a1b54",
         "ink-muted": "#4C3B7C",
-        "surface": "#FDF3E4",
         "coral-accent": "#F2994A",
         "on-secondary-container": "#534283",
         "on-surface": "#1f1b12",
@@ -33,7 +48,6 @@ export default {
         "on-tertiary-fixed": "#2f1500",
         "on-surface-variant": "#48454f",
         "surface-container-highest": "#ebe1d3",
-        "background": "#fff8f1",
         "surface-bright": "#fff8f1",
         "on-background": "#1f1b12",
         "surface-container-high": "#f1e7d8",
@@ -64,11 +78,48 @@ export default {
         "outline-variant": "#cac4d0",
         "tertiary-fixed": "#ffdcc3",
         "ink": "#2A1B54",
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+
+        // Override standard Tailwind colors used in the app with Stitch colors
+        slate: {
+          50: '#FDF3E4',
+          100: '#fcf2e3',
+          200: '#f6edde',
+          300: '#cac4d0',
+          400: '#797580',
+          500: '#645591',
+          600: '#4C3B7C',
+          700: '#4C3B7C',
+          800: '#2A1B54',
+          900: '#1F1440',
+        },
+        gray: {
+          50: '#FDF3E4',
+          100: '#fcf2e3',
+          200: '#f6edde',
+          300: '#cac4d0',
+          400: '#797580',
+          500: '#645591',
+          600: '#4C3B7C',
+          700: '#4C3B7C',
+          800: '#2A1B54',
+          900: '#1F1440',
+        },
+        blue: {
+          50: '#e8ddff',
+          100: '#cfbdff',
+          200: '#c7b3fe',
+          300: '#9384c3',
+          400: '#655496',
+          500: '#3B5BFF',
+          600: '#15023f',
+          700: '#15023f',
+          800: '#1F1440',
+          900: '#241454',
+        }
       },
       fontFamily: {
+        sans: ["Inter", "sans-serif"],
+        headings: ["Epilogue", "sans-serif"],
         "title-lg": ["Epilogue", "sans-serif"],
         "headline-lg-mobile": ["Epilogue", "sans-serif"],
         "label-sm": ["Inter", "sans-serif"],
@@ -77,7 +128,6 @@ export default {
         "body-lg": ["Inter", "sans-serif"],
         "body-sm": ["Inter", "sans-serif"],
         "title-md": ["Inter", "sans-serif"],
-        "headings": ["Poppins", "sans-serif"],
         "title-sm": ["Inter", "sans-serif"],
         "label-md": ["Inter", "sans-serif"],
         "headline-md-mobile": ["Epilogue", "sans-serif"],
@@ -100,36 +150,8 @@ export default {
         "headline-md-mobile": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "800" }],
         "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }],
         "headline-lg": ["40px", { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" }],
-        "headline-sm": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700" }],
+        "headline-sm": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", "fontWeight": "700" }],
         "display-mobile": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "800" }]
-      },
-
-      colors: {
-        brand: '#1F3864',
-        brandHover: '#15294D',
-        surface: '#FFFFFF',
-        background: '#F7F8FA',
-        border: '#E4E7EC',
-        compliantBg: '#DCFCE7',
-        compliantText: '#15803D',
-        needsReviewBg: '#FEF3C7',
-        needsReviewText: '#B45309',
-        nonCompliantBg: '#FEE2E2',
-        nonCompliantText: '#B91C1C',
-        textPrimary: '#1A1D29',
-        textSecondary: '#5C6072'
-      },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-      },
-      keyframes: {
-        scan: {
-          '0%, 100%': { top: '0%' },
-          '50%': { top: '100%' },
-        }
-      },
-      animation: {
-        scan: 'scan 2s ease-in-out infinite',
       }
     },
   },

@@ -364,8 +364,6 @@ export default function BidderSubmitPage() {
                   <div className="flex flex-col items-center justify-center space-y-4 py-2">
                     <div className="relative w-16 h-16 rounded-xl bg-blue-100 flex items-center justify-center border-2 border-blue-200 overflow-hidden shadow-inner">
                       <UploadCloud className="w-8 h-8 text-blue-600 relative z-10" />
-                      <div className="absolute inset-x-0 h-1 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)] animate-scan z-20" />
-                      <div className="absolute inset-x-0 h-8 bg-gradient-to-b from-transparent to-blue-300/30 animate-scan z-0" style={{ transform: 'translateY(-100%)' }} />
                     </div>
                     <div className="flex flex-col items-center">
                       <div className="flex items-center gap-2 text-blue-700 font-semibold">
