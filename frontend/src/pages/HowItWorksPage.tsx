@@ -256,7 +256,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* 4. THE JOURNEY SECTION */}
-      <section id="journey" className="py-20 lg:py-28 px-6 lg:px-10 bg-cream max-w-7xl mx-auto">
+      <section id="journey" className="py-20 lg:py-28 px-6 lg:px-10 bg-cream max-w-7xl mx-auto scroll-mt-24">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink/5 text-ink font-label-md text-label-md font-bold mb-4">
             <span className="material-symbols-outlined text-sm">route</span>
@@ -343,7 +343,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* 5. ALTERNATING FEATURE BLOCKS (How It Works) */}
-      <section className="py-20 lg:py-28 px-6 lg:px-10 max-w-7xl mx-auto space-y-24" id="features">
+      <section className="py-20 lg:py-28 px-6 lg:px-10 max-w-7xl mx-auto space-y-24 scroll-mt-24" id="features">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <div className="lg:col-span-6 space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-accent/15 text-teal-accent font-label-md text-label-md font-bold">
