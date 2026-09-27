@@ -29,15 +29,6 @@ export default function HowItWorksPage() {
     navigate(path);
   };
 
-  // Content Arrays
-  const ExpectedSolutions = [
-    { id: 1, title: 'AI-Driven Document Verification', desc: 'Auto-verify vendor documents using LLMs and OCR to confirm adherence to GeM guidelines.' },
-    { id: 2, title: 'Compliance Rule Engine', desc: 'Evaluate specific criteria (turnover, MSME status, past experience) against dynamic rules.' },
-    { id: 3, title: 'Scoring & Weighting Mechanism', desc: 'Score compliance on a 0-100 scale, flagging edge cases for manual review.' },
-    { id: 4, title: 'Automated Exception Handling', desc: 'Identify incomplete or blurry submissions and prompt vendors to re-upload.' },
-    { id: 5, title: 'Audit Trail & Transparency', desc: 'Provide an immutable log showing exact rule outcomes for CVC defensibility.' }
-  ];
-
   const BidderJourney = [
     { id: 1, title: 'Register & Log In', desc: 'Securely authenticate as a vendor on the platform.', detail: 'Vendors can seamlessly sign up to the portal. Uses secure JWT authentication simulating standard government SSO.', icon: ShieldCheck, status: 'Live' },
     { id: 2, title: 'Upload Tender Documents', desc: 'Submit PAN, GST, ISO certificates, and other required proofs.', detail: 'Documents are instantly processed. Features a drag-and-drop interface with immediate client-side validation for file sizes and formats.', icon: UploadCloud, status: 'Live' },
@@ -51,6 +42,13 @@ export default function HowItWorksPage() {
     { id: 3, title: 'View Automated Scorecard', desc: 'See AI-generated verdicts for all bidders.', detail: 'Instead of reading 500 PDFs, the officer sees a clean table: Compliant (Green), Needs Review (Yellow), Non-Compliant (Red).', icon: Scale, status: 'Live' },
     { id: 4, title: 'Manual Intervention (Edge Cases)', desc: 'Review flagged documents.', detail: 'If the AI confidence score is low, the officer manually inspects the document side-by-side with the extracted text and clicks Pass or Fail.', icon: ShieldAlert, status: 'Live' },
     { id: 5, title: 'Generate Audit Report', desc: 'Export the final decision ledger.', detail: 'Export a CVC-compliant JSON/PDF report proving exactly why a bidder was rejected (e.g. "Rule 4.2 failed: Turnover was 40L, required 50L").', icon: CheckCircle, status: 'Live' }
+  ];
+
+  const Roadmap = [
+    { issueId: 18, title: 'Advanced Pixel Forgery Detection', desc: 'Implement Error Level Analysis (ELA) to detect Photoshop tampering in GST certificates.', limitation: 'Requires heavy GPU compute limits on standard free-tier hosting.', icon: Fingerprint },
+    { issueId: 21, title: 'DigiLocker Direct API Integration', desc: 'Fetch verified documents directly from Gov APIs instead of PDF uploads.', limitation: 'Requires authorized production API keys from MeitY, unavailable for hackathon use.', icon: Server },
+    { issueId: 24, title: 'Blockchain Smart Contracts', desc: 'Migrate the current pseudo-hash-chain to an actual Hyperledger Fabric network.', limitation: 'Deployment complexity of a full blockchain network exceeded the MVP time constraints.', icon: LinkIcon },
+    { issueId: 29, title: 'MCA21 Database Sync', desc: 'Auto-verify company director backgrounds against Ministry of Corporate Affairs.', limitation: 'Third-party API rate limits and lack of public sandbox environments.', icon: Briefcase }
   ];
 
   const RoiData = [
@@ -151,7 +149,6 @@ export default function HowItWorksPage() {
             </button>
           </div>
 
-          {/* Graphic Hero Banner / UI Mockup Canvas */}
           <div className="relative mx-auto max-w-5xl rounded-2xl bg-white border border-ink/10 p-4 lg:p-6 shadow-editorial-elevated text-left">
             <div className="flex items-center justify-between border-b border-ink/10 pb-4 mb-5">
               <div className="flex items-center gap-2">
@@ -231,7 +228,7 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* 3. TRUST & PARTNER BAR */}
+      {/* 3. TRUST BAR */}
       <section className="border-y border-ink/10 bg-cream py-8 px-6 lg:px-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="font-label-md text-label-md text-ink-muted uppercase tracking-wider shrink-0 text-center md:text-left">
@@ -258,7 +255,7 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* 4. THE JOURNEY SECTION (Integrated) */}
+      {/* 4. THE JOURNEY SECTION */}
       <section id="journey" className="py-20 lg:py-28 px-6 lg:px-10 bg-cream max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink/5 text-ink font-label-md text-label-md font-bold mb-4">
@@ -273,7 +270,6 @@ export default function HowItWorksPage() {
           </p>
         </div>
 
-        {/* Toggle Switch */}
         <div className="flex justify-center mb-12">
           <div className="inline-flex bg-surface-container rounded-full p-1 border border-ink/10 shadow-editorial-subtle">
             <button
@@ -297,7 +293,6 @@ export default function HowItWorksPage() {
           </div>
         </div>
 
-        {/* Timeline */}
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 relative">
           <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-ink/10 -translate-x-1/2" />
           
@@ -313,7 +308,6 @@ export default function HowItWorksPage() {
                 )}
                 onClick={() => toggleStep(idx)}
               >
-                {/* Connector dot */}
                 <div className={cn(
                   "hidden md:block absolute top-8 w-3 h-3 rounded-full bg-cream border-2 z-20 transition-colors",
                   isExpanded ? "border-teal-accent bg-teal-accent" : "border-ink/20 group-hover:border-teal-accent",
@@ -350,8 +344,6 @@ export default function HowItWorksPage() {
 
       {/* 5. ALTERNATING FEATURE BLOCKS (How It Works) */}
       <section className="py-20 lg:py-28 px-6 lg:px-10 max-w-7xl mx-auto space-y-24" id="features">
-        
-        {/* Block A */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <div className="lg:col-span-6 space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-accent/15 text-teal-accent font-label-md text-label-md font-bold">
@@ -423,7 +415,6 @@ export default function HowItWorksPage() {
           </div>
         </div>
 
-        {/* Block B */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <div className="lg:col-span-6 order-2 lg:order-1 bg-white rounded-2xl border border-ink/10 p-6 shadow-editorial-elevated">
             <div className="flex items-center justify-between border-b border-ink/10 pb-4 mb-4">
@@ -472,7 +463,62 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* 5B. THE 3-STATE VERDICT MACHINE & VAULT (Additional Features) */}
+      {/* CURVE 1: LIGHT TO DARK */}
+      <div className="w-full overflow-hidden leading-none -mb-1">
+        <svg className="block w-full h-16 md:h-24 text-indigo-dark fill-current" preserveAspectRatio="none" viewBox="0 0 1440 120">
+          <path d="M0,32L80,42.7C160,53,320,75,480,80C640,85,800,75,960,58.7C1120,43,1280,21,1360,10.7L1440,0L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
+        </svg>
+      </div>
+
+      {/* DARK SECTION 1: GITHUB ISSUES ROADMAP */}
+      <section className="bg-indigo-dark text-white py-20 lg:py-28 px-6 lg:px-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-accent font-label-md text-label-md font-bold mb-4">
+                <span className="material-symbols-outlined text-sm">build</span>
+                Post-SIH Tracker
+              </div>
+              <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold tracking-tight text-white">
+                Future Upgrades (Roadmap)
+              </h2>
+            </div>
+            <a href="https://github.com/Shubham15986/gem-compliancelens/issues" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-title-sm text-title-sm font-bold shadow-editorial-subtle transition-all duration-150 flex items-center gap-2">
+              View Issue Tracker
+              <span className="material-symbols-outlined text-sm">open_in_new</span>
+            </a>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {Roadmap.map((item, idx) => (
+              <div key={idx} className="bg-primary-container/80 border border-white/10 p-6 rounded-2xl hover:border-teal-accent/50 transition-colors">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-accent">
+                    <item.icon size={20} />
+                  </div>
+                  <h3 className="font-title-lg text-title-lg font-bold text-white">{item.title}</h3>
+                </div>
+                <p className="font-body-md text-body-md text-on-primary-container leading-relaxed mb-4">
+                  {item.desc}
+                </p>
+                <div className="bg-ink-dark/50 rounded-lg p-3 border border-white/5">
+                  <span className="text-coral-accent font-label-md text-label-md uppercase tracking-wider block mb-1">Limitation / Blocker</span>
+                  <p className="text-on-primary-container font-body-sm text-body-sm">{item.limitation}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CURVE 2: DARK TO LIGHT */}
+      <div className="w-full overflow-hidden leading-none -mt-1 -mb-1 bg-indigo-dark">
+        <svg className="block w-full h-16 md:h-24 text-cream fill-current" preserveAspectRatio="none" viewBox="0 0 1440 120">
+          <path d="M0,64L80,69.3C160,75,320,85,480,74.7C640,64,800,32,960,26.7C1120,21,1280,43,1360,53.3L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
+        </svg>
+      </div>
+
+      {/* LIGHT SECTION 1: 3-STATE VERDICT MACHINE & VAULT */}
       <section className="bg-cream py-20 lg:py-28 px-6 lg:px-10">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -484,7 +530,6 @@ export default function HowItWorksPage() {
             </p>
           </div>
 
-          {/* Functional Verdict Ledger Mockup */}
           <div className="bg-white rounded-2xl border border-ink/10 shadow-editorial-elevated overflow-hidden mb-20 max-w-5xl mx-auto">
             <div className="p-6 border-b border-ink/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
@@ -507,7 +552,6 @@ export default function HowItWorksPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-ink/5 font-body-sm text-body-sm">
-                  {/* Row 1: Compliant */}
                   <tr className="hover:bg-surface-container/30 transition-colors">
                     <td className="py-4 px-6 font-semibold text-ink">Apex Heavy Engineering Pvt Ltd</td>
                     <td className="py-4 px-4 text-ink-muted">Average 3-Yr Turnover &gt;= ₹75 Cr</td>
@@ -519,7 +563,6 @@ export default function HowItWorksPage() {
                       </span>
                     </td>
                   </tr>
-                  {/* Row 2: Needs Review */}
                   <tr className="hover:bg-surface-container/30 transition-colors">
                     <td className="py-4 px-6 font-semibold text-ink">Vanguard Systems &amp; Infra LLP</td>
                     <td className="py-4 px-4 text-ink-muted">Make In India (MII) Class 1 Content</td>
@@ -531,7 +574,6 @@ export default function HowItWorksPage() {
                       </span>
                     </td>
                   </tr>
-                  {/* Row 3: Rejected */}
                   <tr className="hover:bg-surface-container/30 transition-colors">
                     <td className="py-4 px-6 font-semibold text-ink">Krypton Marine Hardware Ltd</td>
                     <td className="py-4 px-4 text-ink-muted">Land Border Shareholder Declaration</td>
@@ -548,7 +590,6 @@ export default function HowItWorksPage() {
             </div>
           </div>
 
-          {/* 2x2 Grid of bold micro-headlines (Vault & Pseudo-Blockchain) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <div className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
               <div className="w-10 h-10 rounded-xl bg-teal-accent/15 text-teal-accent flex items-center justify-center mb-4">
@@ -559,7 +600,6 @@ export default function HowItWorksPage() {
                 All submitted PAN, GSTIN, and compliance documents are stored in an encrypted vault, guaranteeing zero data egress beyond sovereign soil.
               </p>
             </div>
-            
             <div className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
               <div className="w-10 h-10 rounded-xl bg-coral-accent/15 text-coral-accent flex items-center justify-center mb-4">
                 <span className="material-symbols-outlined">lock</span>
@@ -569,7 +609,6 @@ export default function HowItWorksPage() {
                 Every action is logged into an immutable cryptographic hash chain. If a malicious insider alters a record, the SHA-256 chain breaks instantly.
               </p>
             </div>
-            
             <div className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
               <div className="w-10 h-10 rounded-xl bg-pink-accent/15 text-pink-accent flex items-center justify-center mb-4">
                 <span className="material-symbols-outlined">rule</span>
@@ -579,7 +618,6 @@ export default function HowItWorksPage() {
                 Ambiguous edge cases are never auto-rejected. If the AI cannot read a blurry document after 3 strikes, it seamlessly degrades to the manual review queue.
               </p>
             </div>
-            
             <div className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
               <div className="w-10 h-10 rounded-xl bg-sky-accent/15 text-sky-accent flex items-center justify-center mb-4">
                 <span className="material-symbols-outlined">sync</span>
@@ -593,15 +631,14 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* CURVED SVG WAVE INTO DARK SECTION */}
-
+      {/* CURVE 3: LIGHT TO DARK */}
       <div className="w-full overflow-hidden leading-none -mb-1">
         <svg className="block w-full h-16 md:h-24 text-indigo-dark fill-current" preserveAspectRatio="none" viewBox="0 0 1440 120">
           <path d="M0,16L80,26.7C160,37,320,59,480,69.3C640,80,800,80,960,69.3C1120,59,1280,37,1360,26.7L1440,16L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
         </svg>
       </div>
 
-      {/* 6. ECONOMIC IMPACT & ROI */}
+      {/* DARK SECTION 2: ECONOMIC IMPACT & ROI */}
       <section className="bg-indigo-dark text-white py-20 lg:py-28 px-6 lg:px-10">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
@@ -634,6 +671,66 @@ export default function HowItWorksPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CURVE 4: DARK TO LIGHT */}
+      <div className="w-full overflow-hidden leading-none -mt-1 -mb-1 bg-indigo-dark">
+        <svg className="block w-full h-16 md:h-24 text-cream fill-current" preserveAspectRatio="none" viewBox="0 0 1440 120">
+          <path d="M0,48L80,58.7C160,69,320,91,480,85.3C640,80,800,48,960,37.3C1120,27,1280,37,1360,42.7L1440,48L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
+        </svg>
+      </div>
+
+      {/* LIGHT SECTION 2: SECURITY BADGES & CALL TO ACTION */}
+      <section className="bg-cream py-20 lg:py-28 px-6 lg:px-10">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink/5 text-ink font-label-md text-label-md font-bold mb-4">
+              <span className="material-symbols-outlined text-sm">verified</span>
+              Verified Sovereign Accreditations
+            </div>
+            <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-ink tracking-tight mb-4">
+              Uncompromising security for national procurement.
+            </h2>
+            <p className="font-body-lg text-body-lg text-ink-muted">
+              Audited and certified against the highest defense-grade benchmarks for public sector compliance.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
+            <div className="bg-white p-8 rounded-2xl border border-ink/10 shadow-editorial-subtle flex flex-col items-center text-center">
+              <div className="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center text-ink mb-4">
+                <span className="material-symbols-outlined text-3xl text-teal-accent">military_tech</span>
+              </div>
+              <h4 className="font-title-md text-title-md font-bold text-ink mb-1">ISO 27001</h4>
+              <span className="font-label-sm text-label-sm text-ink-muted mb-2">Certified ISMS</span>
+              <p className="font-body-sm text-body-sm text-ink-muted">End-to-end information security protocols audited annually.</p>
+            </div>
+            <div className="bg-white p-8 rounded-2xl border border-ink/10 shadow-editorial-subtle flex flex-col items-center text-center">
+              <div className="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center text-ink mb-4">
+                <span className="material-symbols-outlined text-3xl text-coral-accent">policy</span>
+              </div>
+              <h4 className="font-title-md text-title-md font-bold text-ink mb-1">SOC 2 Type II</h4>
+              <span className="font-label-sm text-label-sm text-ink-muted mb-2">Continuous Attestation</span>
+              <p className="font-body-sm text-body-sm text-ink-muted">Confidentiality, availability, and processing integrity assured.</p>
+            </div>
+            <div className="bg-white p-8 rounded-2xl border border-ink/10 shadow-editorial-subtle flex flex-col items-center text-center">
+              <div className="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center text-ink mb-4">
+                <span className="material-symbols-outlined text-3xl text-pink-accent">gavel</span>
+              </div>
+              <h4 className="font-title-md text-title-md font-bold text-ink mb-1">GFR 2017 Clause 144(xi)</h4>
+              <span className="font-label-sm text-label-sm text-ink-muted mb-2">Land Border Compliance</span>
+              <p className="font-body-sm text-body-sm text-ink-muted">Automated verification of sovereign beneficial ownership mandates.</p>
+            </div>
+            <div className="bg-white p-8 rounded-2xl border border-ink/10 shadow-editorial-subtle flex flex-col items-center text-center">
+              <div className="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center text-ink mb-4">
+                <span className="material-symbols-outlined text-3xl text-sky-accent">cloud_done</span>
+              </div>
+              <h4 className="font-title-md text-title-md font-bold text-ink mb-1">MeitY Empanelled</h4>
+              <span className="font-label-sm text-label-sm text-ink-muted mb-2">Govt of India Cloud</span>
+              <p className="font-body-sm text-body-sm text-ink-muted">Empanelled for critical and sensitive central procurement data hosting.</p>
+            </div>
           </div>
         </div>
       </section>
