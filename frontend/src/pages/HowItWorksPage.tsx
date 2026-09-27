@@ -472,6 +472,13 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
+            {/* CURVED SVG WAVE INTO DARK SECTION */}
+      <div className="w-full overflow-hidden leading-none -mb-1">
+        <svg className="block w-full h-16 md:h-24 text-indigo-dark fill-current" preserveAspectRatio="none" viewBox="0 0 1440 120">
+          <path d="M0,16L80,26.7C160,37,320,59,480,69.3C640,80,800,80,960,69.3C1120,59,1280,37,1360,26.7L1440,16L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
+        </svg>
+      </div>
+
       {/* 6. ROADMAP & LIMITATIONS */}
       <section className="bg-indigo-dark text-white py-20 lg:py-28 px-6 lg:px-10">
         <div className="max-w-7xl mx-auto">
