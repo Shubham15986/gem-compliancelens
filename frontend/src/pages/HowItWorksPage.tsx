@@ -471,8 +471,131 @@ export default function HowItWorksPage() {
           </div>
         </div>
       </section>
+      </section>
 
-            {/* CURVED SVG WAVE INTO DARK SECTION */}
+      {/* 5B. THE 3-STATE VERDICT MACHINE & VAULT (Additional Features) */}
+      <section className="bg-cream py-20 lg:py-28 px-6 lg:px-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-ink tracking-tight mb-4">
+              The 3-state verdict machine.
+            </h2>
+            <p className="font-body-lg text-body-lg text-ink-muted">
+              Ambiguity creates legal disputes and stalled public tenders. GemOne provides an unmistakable tripartite classification for every bidder requirement, backed by an immutable tender vault.
+            </p>
+          </div>
+
+          {/* Functional Verdict Ledger Mockup */}
+          <div className="bg-white rounded-2xl border border-ink/10 shadow-editorial-elevated overflow-hidden mb-20 max-w-5xl mx-auto">
+            <div className="p-6 border-b border-ink/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="font-title-lg text-title-lg font-bold text-ink">Automated Procurement Evaluation Ledger</h3>
+                <p className="font-body-sm text-body-sm text-ink-muted">Bid Reference: DRDO/NAV/2025/EOI-419 • Final AST Pass 18:04:12 IST</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-1 rounded-full bg-surface-container font-label-md text-label-md text-ink font-semibold">Triage Export</span>
+                <button className="px-4 py-1.5 rounded-full bg-ink text-cream font-label-md text-label-md font-bold hover:bg-ink-dark transition">Download CAG Dossier</button>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-surface-container/50 border-b border-ink/10 font-label-md text-label-md text-ink-muted">
+                    <th className="py-3.5 px-6">Bidder Entity</th>
+                    <th className="py-3.5 px-4">Requirement Evaluated</th>
+                    <th className="py-3.5 px-4">Extracted Evidence</th>
+                    <th className="py-3.5 px-6">Statutory Verdict</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-ink/5 font-body-sm text-body-sm">
+                  {/* Row 1: Compliant */}
+                  <tr className="hover:bg-surface-container/30 transition-colors">
+                    <td className="py-4 px-6 font-semibold text-ink">Apex Heavy Engineering Pvt Ltd</td>
+                    <td className="py-4 px-4 text-ink-muted">Average 3-Yr Turnover &gt;= ₹75 Cr</td>
+                    <td className="py-4 px-4 text-ink font-mono">₹112.4 Cr audited balance sheets</td>
+                    <td className="py-4 px-6">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-accent/15 text-teal-accent font-bold font-label-md">
+                        <span className="w-2 h-2 rounded-full bg-teal-accent"></span>
+                        Compliant
+                      </span>
+                    </td>
+                  </tr>
+                  {/* Row 2: Needs Review */}
+                  <tr className="hover:bg-surface-container/30 transition-colors">
+                    <td className="py-4 px-6 font-semibold text-ink">Vanguard Systems &amp; Infra LLP</td>
+                    <td className="py-4 px-4 text-ink-muted">Make In India (MII) Class 1 Content</td>
+                    <td className="py-4 px-4 text-ink font-mono">51.2% reported (borderline threshold)</td>
+                    <td className="py-4 px-6">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-coral-accent/15 text-coral-accent font-bold font-label-md">
+                        <span className="w-2 h-2 rounded-full bg-coral-accent"></span>
+                        Needs Review
+                      </span>
+                    </td>
+                  </tr>
+                  {/* Row 3: Rejected */}
+                  <tr className="hover:bg-surface-container/30 transition-colors">
+                    <td className="py-4 px-6 font-semibold text-ink">Krypton Marine Hardware Ltd</td>
+                    <td className="py-4 px-4 text-ink-muted">Land Border Shareholder Declaration</td>
+                    <td className="py-4 px-4 text-error font-mono">Unverified Holding Parent in Offshore Co</td>
+                    <td className="py-4 px-6">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error-container text-error font-bold font-label-md">
+                        <span className="w-2 h-2 rounded-full bg-error"></span>
+                        Rejected
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* 2x2 Grid of bold micro-headlines (Vault & Pseudo-Blockchain) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
+              <div className="w-10 h-10 rounded-xl bg-teal-accent/15 text-teal-accent flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined">hub</span>
+              </div>
+              <h4 className="font-title-lg text-title-lg font-bold text-ink mb-2">Secure Tender Vault</h4>
+              <p className="font-body-md text-body-md text-ink-muted">
+                All submitted PAN, GSTIN, and compliance documents are stored in an encrypted vault, guaranteeing zero data egress beyond sovereign soil.
+              </p>
+            </div>
+            
+            <div className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
+              <div className="w-10 h-10 rounded-xl bg-coral-accent/15 text-coral-accent flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined">lock</span>
+              </div>
+              <h4 className="font-title-lg text-title-lg font-bold text-ink mb-2">Immutable Pseudo-Blockchain</h4>
+              <p className="font-body-md text-body-md text-ink-muted">
+                Every action is logged into an immutable cryptographic hash chain. If a malicious insider alters a record, the SHA-256 chain breaks instantly.
+              </p>
+            </div>
+            
+            <div className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
+              <div className="w-10 h-10 rounded-xl bg-pink-accent/15 text-pink-accent flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined">rule</span>
+              </div>
+              <h4 className="font-title-lg text-title-lg font-bold text-ink mb-2">Strike-3 Graceful Degradation</h4>
+              <p className="font-body-md text-body-md text-ink-muted">
+                Ambiguous edge cases are never auto-rejected. If the AI cannot read a blurry document after 3 strikes, it seamlessly degrades to the manual review queue.
+              </p>
+            </div>
+            
+            <div className="p-6 rounded-2xl bg-white border border-ink/10 shadow-editorial-subtle">
+              <div className="w-10 h-10 rounded-xl bg-sky-accent/15 text-sky-accent flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined">sync</span>
+              </div>
+              <h4 className="font-title-lg text-title-lg font-bold text-ink mb-2">Direct Sovereign APIs</h4>
+              <p className="font-body-md text-body-md text-ink-muted">
+                Integrated with GSTN, MCA21, CBDT, and ICAI UDIN registers directly over MeitY-authorized secure gateways.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CURVED SVG WAVE INTO DARK SECTION */}
+
       <div className="w-full overflow-hidden leading-none -mb-1">
         <svg className="block w-full h-16 md:h-24 text-indigo-dark fill-current" preserveAspectRatio="none" viewBox="0 0 1440 120">
           <path d="M0,16L80,26.7C160,37,320,59,480,69.3C640,80,800,80,960,69.3C1120,59,1280,37,1360,26.7L1440,16L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
