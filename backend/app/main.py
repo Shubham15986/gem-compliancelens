@@ -19,35 +19,7 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     try:
-        engine = create_async_engine(settings.DATABASE_URL, connect_args={"statement_cache_size": 0})
-        async with engine.begin() as conn:
-            await conn.execute(text("ALTER TABLE tenders ADD COLUMN IF NOT EXISTS tender_no VARCHAR;"))
-            await conn.execute(text("ALTER TABLE tenders ADD COLUMN IF NOT EXISTS access_type VARCHAR DEFAULT 'public';"))
-            await conn.execute(text("ALTER TABLE tenders ADD COLUMN IF NOT EXISTS closing_date TIMESTAMP WITH TIME ZONE;"))
-            await conn.execute(text("ALTER TABLE tenders ADD COLUMN IF NOT EXISTS est_value NUMERIC;"))
-            await conn.execute(text("ALTER TABLE tenders ADD COLUMN IF NOT EXISTS private_password VARCHAR;"))
-            await conn.execute(text("ALTER TABLE bidders ADD COLUMN IF NOT EXISTS gstin VARCHAR;"))
-            await conn.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS ix_tenders_tender_no ON tenders(tender_no);"))
-            try:
-                await conn.execute(text("ALTER TYPE doc_source_enum ADD VALUE IF NOT EXISTS 'upload';"))
-            except Exception:
-                try:
-                    await conn.execute(text("CREATE TYPE doc_source_enum AS ENUM ('upload', 'digilocker');"))
-                except Exception:
-                    pass
-            await conn.execute(text("ALTER TABLE bidder_documents ADD COLUMN IF NOT EXISTS source doc_source_enum DEFAULT 'upload';"))
-            await conn.execute(text("ALTER TABLE bidder_documents ADD COLUMN IF NOT EXISTS digilocker_request_id VARCHAR;"))
-            await conn.execute(text("ALTER TABLE bidder_documents ADD COLUMN IF NOT EXISTS digital_signature_valid BOOLEAN;"))
-            await conn.execute(text("ALTER TABLE bidder_documents ADD COLUMN IF NOT EXISTS confirmed_fields JSONB;"))
-            await conn.execute(text("ALTER TABLE bidder_documents ADD COLUMN IF NOT EXISTS is_temporary BOOLEAN DEFAULT FALSE;"))
-            try:
-                await conn.execute(text("ALTER TYPE bid_status_enum ADD VALUE IF NOT EXISTS 'access_pending';"))
-            except Exception:
-                pass
-            try:
-                await conn.execute(text("ALTER TYPE bid_status_enum ADD VALUE IF NOT EXISTS 'access_denied';"))
-            except Exception:
-                pass
+        pass
     except Exception as e:
         logging.error(f"Migration failed: {e}")
 
