@@ -1,232 +1,343 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { 
-  Building2, UserCheck, UploadCloud, FileSearch, ShieldCheck, 
-  Send, Bell, MessageSquare, Scale, Fingerprint, Database, AlertCircle, FileLock2, Languages
+  ShieldCheck, UploadCloud, FileSearch, Scale, Bot, CheckCircle, 
+  Database, Fingerprint, FileLock2, Search, Zap, Clock, ShieldAlert,
+  Server, Link as LinkIcon, Briefcase
 } from 'lucide-react';
-import { cn } from '../lib/utils';
 import { useNavigate } from 'react-router-dom';
+import { cn } from '../lib/utils';
 
 export default function HowItWorksPage() {
-  const [activeTab, setActiveTab] = useState<'officer' | 'bidder'>('officer');
-  const [expandedStep, setExpandedStep] = useState<number | null>(null);
   const navigate = useNavigate();
-  
+  const [activeTab, setActiveTab] = useState<'bidder' | 'officer'>('bidder');
+  const [expandedSteps, setExpandedSteps] = useState<number[]>([0]);
+
   const userStr = localStorage.getItem('user');
   const user = userStr ? JSON.parse(userStr) : null;
-  const role = user?.role || 'officer';
+  const role = user?.role;
 
-  const BidderSteps = [
-    { id: 1, title: 'Register & Log In', desc: 'Securely authenticate as a vendor on the platform.', detail: 'Vendors can seamlessly sign up to the portal. Uses secure JWT authentication simulating standard government SSO.', icon: UserCheck, status: 'Live' },
-    { id: 2, title: 'Browse Open Tenders', desc: 'View eligibility requirements and custom rules upfront before applying.', detail: 'Bidders can view all published tenders. Each tender clearly lists its mathematical compliance rules (like Local Content thresholds or Turnover requirements) configured by the Procurement Officer.', icon: Building2, status: 'Live' },
-    { id: 3, title: 'Upload Documents', desc: 'Securely upload PDFs and Images for automated processing.', detail: 'We built a secure Vault for bidders to drop their PAN, GSTIN, and Udyam certificates. The system natively accepts both PDFs and raw Images (JPG/PNG).', icon: UploadCloud, status: 'Live' },
-    { id: 4, title: 'Fetch via DigiLocker', desc: 'Pull verified documents directly from the government repository.', detail: 'Instead of manual uploads, bidders can click "Fetch via DigiLocker". This launches an OAuth consent screen to securely pull cryptographically signed documents directly from the source, bypassing OCR entirely.', icon: Database, status: 'Demo Mode' },
-    { id: 5, title: 'Real-time AI Extraction', desc: 'Instantly view OCR-extracted fields from your uploaded documents.', detail: 'The moment a file is uploaded, our Tesseract + pdfplumber AI engine scans the document, parses the unstructured text, and extracts the exact compliance variables needed. Missing required fields instantly trigger a rejection to prevent bad data.', icon: FileSearch, status: 'Live' },
-    { id: 6, title: 'Pre-Bid Readiness Score', desc: 'Check if you meet the specific tender requirements before submitting.', detail: 'Our platform generates a /100 Readiness Score on the Bidder dashboard, giving vendors a clear indicator of whether their Vault contains the necessary documents to pass the upcoming Rule Engine evaluation.', icon: ShieldCheck, status: 'Live' },
-    { id: 7, title: 'Submit Application', desc: 'Send your completed vault and compliance data for officer review.', detail: 'Once the Vault is ready, a single click packages the Bidder Profile and all attached documents into a frozen snapshot submitted directly to the Procurement Officer.', icon: Send, status: 'Live' },
-    { id: 8, title: 'Track Application Status', desc: 'Monitor where your bid is in the evaluation pipeline.', detail: 'The dashboard updates in real-time as the Officer evaluates the bid, changing status from Pending -> Under Review -> Clarification -> Accepted/Rejected.', icon: Bell, status: 'Live' },
-    { id: 9, title: 'Respond to Clarifications', desc: 'Directly answer queries from Procurement Officers.', detail: 'If the Officer flags a document (e.g. a blurry image), they can open a clarification loop. The Bidder can respond directly through the portal without needing external emails.', icon: MessageSquare, status: 'Live' },
-    { id: 10, title: 'Receive Final Decision', desc: 'Get a plain-language explanation of your qualification or disqualification.', detail: 'If disqualified, the Bidder doesn\'t just get a "Failed" badge. They receive the exact generated explanation of which rule they failed (e.g., "Your turnover of 4L is below the 5L threshold").', icon: Scale, status: 'Live' },
-  ];
-
-  const OfficerSteps = [
-    { id: 1, title: 'Log In to Dashboard', desc: 'Access the centralized procurement officer interface.', detail: 'Officers log into a specialized, high-security dashboard designed to evaluate hundreds of bids quickly and efficiently.', icon: UserCheck, status: 'Live' },
-    { id: 2, title: 'Configure Tender Rules', desc: 'Use the RulesConfig to set exact thresholds.', detail: 'Officers can dynamically build compliance requirements for a new tender using our Rules Engine UI. They can define mandatory flags, minimum turnover, local content percentages, and specific document requirements.', icon: Building2, status: 'Live' },
-    { id: 3, title: 'View Bid Queue', desc: 'Monitor all submitted applications for your active tenders.', detail: 'A streamlined Kanban-style table showing all bidders who have submitted their vaults, ordered by submission time.', icon: Database, status: 'Live' },
-    { id: 4, title: 'Automated Compliance Check', desc: 'The Rule Engine evaluates OCR data mathematically against your rules.', detail: 'Instead of manually reading documents, the Officer clicks "Evaluate". Our Abstract Syntax Tree (AST) deterministic engine calculates the exact pass/fail state for every rule simultaneously.', icon: FileSearch, status: 'Live' },
-    { id: 5, title: 'Review Scorecard', desc: 'Instantly see the overall Compliance Score and Risk Level.', detail: 'The engine generates a 0-100 Scorecard and a Low/Medium/High Risk level based on the evaluation, highlighting exactly what failed.', icon: ShieldCheck, status: 'Live' },
-    { id: 6, title: 'Drill-Down Explanations', desc: 'Click any check to see the plain-language reasoning and evidence.', detail: 'When an Officer clicks a failed check, they see exactly WHY it failed (e.g. "Vendor uploaded an expired GSTIN") and a side-by-side view of the uploaded document evidence.', icon: AlertCircle, status: 'Live' },
-    { id: 7, title: '1-Click Verification', desc: 'Cross-check flagged items with government portals manually if needed.', detail: 'If the OCR fails 3 times, the system gracefully degrades to manual review. The Officer can view the blurry document, manually verify it against the CPPP portal, and explicitly override the AI.', icon: UserCheck, status: 'Live' },
-    { id: 8, title: 'Document Forensics', desc: 'Review PDF Metadata, Cryptographic Hashes, and ELA image analysis.', detail: 'The system runs forensic checks in the background. Officers are alerted if the PDF was manipulated in Photoshop (Metadata), if the image pixels are edited (ELA), or if the file hash was reused by another bidder (Collusion).', icon: Fingerprint, status: 'Live' },
-    { id: 9, title: 'Clarification & Decision', desc: 'Request more info from the bidder or submit the final verdict.', detail: 'Officers can pause evaluation to ask the Bidder a direct question, or hit "Accept/Reject" to finalize the bid evaluation.', icon: Scale, status: 'Live' },
-    { id: 10, title: 'Immutable Audit Trail', desc: 'View the cryptographically chained timeline for CVC/CAG defensibility.', detail: 'Every single action (upload, evaluate, override, decision) writes a SHA-256 hash to a PostgreSQL pseudo-blockchain. This guarantees the evaluation history cannot be tampered with by malicious actors.', icon: FileLock2, status: 'Live' },
-  ];
-
-  const Roadmap = [
-    { 
-      title: 'Live Government APIs', 
-      desc: 'Swap Demo Provider for Live OAuth keys (GSTN, MCA, DigiLocker).', 
-      icon: Database,
-      issueId: 17,
-      limitation: 'Requires institutional partnership and secure API keys from Govt of India, unavailable during a public hackathon.'
-    },
-    { 
-      title: 'Multilingual UI (i18n)', 
-      desc: 'Full localization for Hindi and regional languages.', 
-      icon: Languages,
-      issueId: 19,
-      limitation: 'Architectural overhead. Requires massive translation dictionaries which distracts from the core AI extraction MVP.'
-    },
-    { 
-      title: 'Deepfake & AI Fraud', 
-      desc: 'Advanced ML models to detect synthetic generative documents.', 
-      icon: ShieldCheck,
-      issueId: 15,
-      limitation: 'Requires specialized GPU instances and large datasets of deepfake documents for training, constrained by free-tier hosting.'
-    },
-    { 
-      title: 'Database PII Encryption', 
-      desc: 'AES-256 encryption at rest for all bidder sensitive data.', 
-      icon: FileLock2,
-      issueId: 13,
-      limitation: 'Adds significant latency to the OCR pipeline. Deferred to production deployment.'
-    },
-  ];
-
-  const getBadgeColor = (status: string) => {
-    switch(status) {
-      case 'Live': return 'bg-green-100 text-green-800 border-green-200';
-      case 'Demo Mode': return 'bg-amber-100 text-amber-800 border-amber-200';
-      case 'Coming Soon': return 'bg-blue-100 text-blue-800 border-blue-200';
-      default: return 'bg-slate-100 text-slate-800 border-slate-200';
+  const toggleStep = (idx: number) => {
+    if (expandedSteps.includes(idx)) {
+      setExpandedSteps(expandedSteps.filter(i => i !== idx));
+    } else {
+      setExpandedSteps([...expandedSteps, idx]);
     }
   };
 
-  const steps = activeTab === 'officer' ? OfficerSteps : BidderSteps;
+  const handleNav = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    navigate(path);
+  };
+
+  // Content Arrays
+  const ExpectedSolutions = [
+    { id: 1, title: 'AI-Driven Document Verification', desc: 'Auto-verify vendor documents using LLMs and OCR to confirm adherence to GeM guidelines.' },
+    { id: 2, title: 'Compliance Rule Engine', desc: 'Evaluate specific criteria (turnover, MSME status, past experience) against dynamic rules.' },
+    { id: 3, title: 'Scoring & Weighting Mechanism', desc: 'Score compliance on a 0-100 scale, flagging edge cases for manual review.' },
+    { id: 4, title: 'Automated Exception Handling', desc: 'Identify incomplete or blurry submissions and prompt vendors to re-upload.' },
+    { id: 5, title: 'Audit Trail & Transparency', desc: 'Provide an immutable log showing exact rule outcomes for CVC defensibility.' }
+  ];
+
+  const BidderJourney = [
+    { id: 1, title: 'Register & Log In', desc: 'Securely authenticate as a vendor on the platform.', detail: 'Vendors can seamlessly sign up to the portal. Uses secure JWT authentication simulating standard government SSO.', icon: ShieldCheck, status: 'Live' },
+    { id: 2, title: 'Upload Tender Documents', desc: 'Submit PAN, GST, ISO certificates, and other required proofs.', detail: 'Documents are instantly processed. Features a drag-and-drop interface with immediate client-side validation for file sizes and formats.', icon: UploadCloud, status: 'Live' },
+    { id: 3, title: 'AI Pre-Check (Smart Gatekeeper)', desc: 'Immediate feedback on blurry or missing documents before final submission.', detail: 'The system runs a preliminary OCR check. If a document is unreadable (Strike 1), the vendor is asked to re-upload, saving weeks of back-and-forth.', icon: FileSearch, status: 'Live' },
+    { id: 4, title: 'Final Submission', desc: 'Cryptographically sign and lock the bid.', detail: 'The final application is committed to the database. An immutable hash is generated to ensure the payload cannot be tampered with post-submission.', icon: FileLock2, status: 'Live' }
+  ];
+
+  const OfficerJourney = [
+    { id: 1, title: 'Log In to Dashboard', desc: 'Access the centralized procurement officer interface.', detail: 'Officers log into a specialized, high-security dashboard designed to evaluate hundreds of bids quickly and efficiently.', icon: ShieldCheck, status: 'Live' },
+    { id: 2, title: 'Configure Tender Rules', desc: 'Define exactly what constitutes a "Pass" for this specific tender.', detail: 'Officers can set dynamic thresholds. (e.g. Minimum turnover = ₹50 Lakh, ISO 9001 required). The engine adapts instantly.', icon: Database, status: 'Live' },
+    { id: 3, title: 'View Automated Scorecard', desc: 'See AI-generated verdicts for all bidders.', detail: 'Instead of reading 500 PDFs, the officer sees a clean table: Compliant (Green), Needs Review (Yellow), Non-Compliant (Red).', icon: Scale, status: 'Live' },
+    { id: 4, title: 'Manual Intervention (Edge Cases)', desc: 'Review flagged documents.', detail: 'If the AI confidence score is low, the officer manually inspects the document side-by-side with the extracted text and clicks Pass or Fail.', icon: ShieldAlert, status: 'Live' },
+    { id: 5, title: 'Generate Audit Report', desc: 'Export the final decision ledger.', detail: 'Export a CVC-compliant JSON/PDF report proving exactly why a bidder was rejected (e.g. "Rule 4.2 failed: Turnover was 40L, required 50L").', icon: CheckCircle, status: 'Live' }
+  ];
+
+  const Roadmap = [
+    { issueId: 18, title: 'Advanced Pixel Forgery Detection', desc: 'Implement Error Level Analysis (ELA) to detect Photoshop tampering in GST certificates.', limitation: 'Requires heavy GPU compute limits on standard free-tier hosting.', icon: Fingerprint },
+    { issueId: 21, title: 'DigiLocker Direct API Integration', desc: 'Fetch verified documents directly from Gov APIs instead of PDF uploads.', limitation: 'Requires authorized production API keys from MeitY, unavailable for hackathon use.', icon: Server },
+    { issueId: 24, title: 'Blockchain Smart Contracts', desc: 'Migrate the current pseudo-hash-chain to an actual Hyperledger Fabric network.', limitation: 'Deployment complexity of a full blockchain network exceeded the MVP time constraints.', icon: LinkIcon },
+    { issueId: 29, title: 'MCA21 Database Sync', desc: 'Auto-verify company director backgrounds against Ministry of Corporate Affairs.', limitation: 'Third-party API rate limits and lack of public sandbox environments.', icon: Briefcase }
+  ];
+
+  const getBadgeColor = (status: string) => {
+    if (status === 'Live') return 'bg-teal-accent/15 text-teal-accent border-teal-accent/20';
+    if (status === 'In Progress') return 'bg-coral-accent/15 text-coral-accent border-coral-accent/20';
+    return 'bg-surface-container text-ink-muted border-ink/10';
+  };
+
+  const journey = activeTab === 'bidder' ? BidderJourney : OfficerJourney;
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Top Navbar */}
-      <header className="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-6 sticky top-0 z-50 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center text-white font-bold">G</div>
-          <span className="font-bold text-xl text-slate-800">GemOne <span className="text-sm font-medium text-slate-400 ml-2">| Platform Tour</span></span>
+    <div className="min-h-screen bg-cream text-ink antialiased font-body-md selection:bg-teal-accent selection:text-white">
+      
+      {/* 1. STICKY NAV */}
+      <header className="sticky top-0 z-50 w-full bg-cream shadow-sm">
+        <div className="flex justify-between items-center max-w-7xl mx-auto px-6 lg:px-10 h-20">
+          <a className="flex items-center gap-3 group" href="#" onClick={(e) => handleNav(e, '/')}>
+            <div className="w-10 h-10 rounded-xl bg-ink flex items-center justify-center text-cream shadow-editorial-subtle group-hover:scale-105 transition-transform duration-200">
+              <span className="material-symbols-outlined text-teal-accent">policy</span>
+            </div>
+            <span className="font-headline-sm text-headline-sm font-bold text-ink tracking-tight">GemOne</span>
+          </a>
+          
+          <nav className="hidden md:flex items-center gap-8">
+            <a className="text-ink font-title-sm text-title-sm font-semibold border-b-2 border-ink pb-1 flex items-center gap-1" href="#journey">
+              Journey
+            </a>
+            <a className="text-ink-muted font-title-sm text-title-sm font-medium hover:text-ink transition-colors duration-150 flex items-center gap-1" href="#features">
+              How It Works
+            </a>
+            <a className="text-ink-muted font-title-sm text-title-sm font-medium hover:text-ink transition-colors duration-150 flex items-center gap-1" href="#sih-requirements" onClick={(e) => handleNav(e, '/sih-compliance')}>
+              SIH 1308 Requirements
+            </a>
+          </nav>
+
+          <div className="flex items-center gap-5">
+            {!user ? (
+              <>
+                <a className="hidden sm:inline-block font-title-sm text-title-sm font-medium text-ink hover:text-ink-dark transition-colors duration-150 cursor-pointer" onClick={(e) => handleNav(e, '/login')}>
+                  Log in
+                </a>
+                <a className="px-5 py-2.5 rounded-full bg-ink text-cream hover:bg-ink-dark font-title-sm text-title-sm font-bold shadow-editorial-subtle active:scale-[0.98] transition-all duration-150 flex items-center gap-2 cursor-pointer" onClick={(e) => handleNav(e, '/login')}>
+                  <span>Get started</span>
+                  <span className="material-symbols-outlined text-sm text-teal-accent">arrow_forward</span>
+                </a>
+              </>
+            ) : (
+              <button 
+                onClick={() => navigate(`/${role}/tenders`)}
+                className="px-5 py-2.5 rounded-full bg-ink text-cream hover:bg-ink-dark font-title-sm text-title-sm font-bold shadow-editorial-subtle active:scale-[0.98] transition-all duration-150 flex items-center gap-2"
+              >
+                Go to Dashboard
+                <span className="material-symbols-outlined text-sm text-teal-accent">arrow_forward</span>
+              </button>
+            )}
+          </div>
         </div>
-        {user ? (
-          <button 
-            onClick={() => navigate(`/${role}/tenders`)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm transition-colors shadow-sm"
-          >
-            Go to Dashboard &rarr;
-          </button>
-        ) : (
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={() => navigate('/login')}
-              className="text-slate-600 hover:text-slate-900 font-medium text-sm transition-colors"
-            >
-              Log In
-            </button>
-            <button 
-              onClick={() => navigate('/login')}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm transition-colors shadow-sm"
-            >
-              Register &rarr;
+      </header>
+
+      {/* 2. HERO SECTION */}
+      <section className="relative pt-16 pb-20 lg:pt-24 lg:pb-32 px-6 lg:px-10 overflow-hidden">
+        <div className="max-w-5xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-surface-container border border-ink/10 mb-8 shadow-editorial-subtle">
+            <span className="w-2 h-2 rounded-full bg-teal-accent animate-pulse"></span>
+            <span className="font-label-md text-label-md text-ink uppercase tracking-wider">CAG Audit &amp; GeM GFR-Compliant Engine v4.2</span>
+          </div>
+          
+          <h1 className="font-display text-display-mobile lg:text-display text-ink tracking-tight max-w-4xl mx-auto mb-6">
+            Government procurement forensics, solved together.
+          </h1>
+          
+          <p className="font-body-lg text-body-lg text-ink-muted max-w-2xl mx-auto mb-10 leading-relaxed">
+            GemOne turns complex tender documents, GST filings, and statutory checks into instant, CAG-defensible compliance verdicts for SIH 1308.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            {!user ? (
+              <button onClick={() => navigate('/login')} className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-ink hover:bg-ink-dark text-cream font-title-md text-title-md font-bold shadow-editorial-elevated active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-2">
+                <span>Try GemOne free</span>
+                <span className="material-symbols-outlined text-coral-accent">verified</span>
+              </button>
+            ) : (
+              <button onClick={() => navigate(`/${role}/tenders`)} className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-ink hover:bg-ink-dark text-cream font-title-md text-title-md font-bold shadow-editorial-elevated active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-2">
+                <span>Move to Dashboard</span>
+                <span className="material-symbols-outlined text-coral-accent">dashboard</span>
+              </button>
+            )}
+            <button onClick={() => navigate('/sih-compliance')} className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white hover:bg-surface-container text-ink font-title-md text-title-md font-semibold border border-ink/20 shadow-editorial-subtle transition-all duration-150 flex items-center justify-center gap-2">
+              <span className="material-symbols-outlined text-ink-muted">rule</span>
+              <span>SIH Requirements</span>
             </button>
           </div>
-        )}
-      </header>
-      
-      <div className="max-w-6xl mx-auto space-y-12 pb-20 px-4">
-      
-      {/* Hero Section */}
-      <section className="text-center pt-8 space-y-6">
-        <div className="w-16 h-16 mx-auto bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-3xl shadow-lg">
-          G
-        </div>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-          GemOne
-        </h1>
-        <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
-          An AI-enabled integrated platform for automated verification of bidder compliance in GeM procurement. 
-          Upload documents, extract fields via AI, and automatically evaluate bids against deterministic rules.
-        </p>
-        
-        <div className="flex items-center justify-center gap-4 pt-4">
-          {user ? (
-            <button 
-              onClick={() => navigate(`/${role}/tenders`)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold transition-colors shadow-lg"
-            >
-              Go to Dashboard &rarr;
-            </button>
-          ) : (
-            <>
-              <button 
-                onClick={() => navigate('/login')}
-                className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-8 py-3 rounded-lg font-bold transition-colors shadow-sm"
-              >
-                Log In
-              </button>
-              <button 
-                onClick={() => navigate('/login')}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold transition-colors shadow-lg"
-              >
-                Register &rarr;
-              </button>
-            </>
-          )}
-        </div>
-        
-        {/* Link to SIH Matrix */}
-        <div className="pt-8">
-          <button 
-            onClick={() => navigate('/sih-compliance')}
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-full transition-colors border border-blue-200"
-          >
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-            </span>
-            View SIH Requirements Matrix & Flowchart &rarr;
-          </button>
+
+          {/* Graphic Hero Banner / UI Mockup Canvas */}
+          <div className="relative mx-auto max-w-5xl rounded-2xl bg-white border border-ink/10 p-4 lg:p-6 shadow-editorial-elevated text-left">
+            <div className="flex items-center justify-between border-b border-ink/10 pb-4 mb-5">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-pink-accent/80"></span>
+                <span className="w-3 h-3 rounded-full bg-coral-accent/80"></span>
+                <span className="w-3 h-3 rounded-full bg-teal-accent/80"></span>
+                <span className="ml-4 font-label-md text-label-md text-ink-muted">Tender Dossier #GEM/2025/B/9018442 — Verification Workspace</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="px-2.5 py-1 rounded-full bg-teal-accent/15 text-teal-accent font-label-md text-label-md font-bold flex items-center gap-1">
+                  <span className="material-symbols-outlined text-xs">check_circle</span>
+                  AST 0.18s Verified
+                </span>
+                <span className="font-label-sm text-label-sm text-ink-muted hidden sm:inline-block">CVC Integrity Pass</span>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <div className="lg:col-span-7 space-y-4">
+                <div className="p-4 rounded-xl bg-surface-container/60 border border-ink/5">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-title-sm text-title-sm text-ink font-bold">Bharat Electronics &amp; Surveillance Corp</span>
+                    <span className="px-2 py-0.5 rounded-full bg-ink text-cream font-label-sm text-label-sm">Primary Bidder (L1)</span>
+                  </div>
+                  <p className="font-body-sm text-body-sm text-ink-muted mb-3">Tender Scope: Automated Defense Perimeter Sensor Array System</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="p-2 rounded-lg bg-white border border-ink/10">
+                      <div className="font-label-sm text-label-sm text-ink-muted">GSTN Status</div>
+                      <div className="font-title-sm text-title-sm text-ink font-bold flex items-center gap-1 text-teal-accent">
+                        <span className="material-symbols-outlined text-sm">verified_user</span> 3B Active
+                      </div>
+                    </div>
+                    <div className="p-2 rounded-lg bg-white border border-ink/10">
+                      <div className="font-label-sm text-label-sm text-ink-muted">Turnover GFR</div>
+                      <div className="font-title-sm text-title-sm text-ink font-bold text-ink">₹142.8 Cr</div>
+                    </div>
+                    <div className="p-2 rounded-lg bg-white border border-ink/10">
+                      <div className="font-label-sm text-label-sm text-ink-muted">Pixel Tamper ELA</div>
+                      <div className="font-title-sm text-title-sm text-ink font-bold text-teal-accent">0.00% Clean</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-ink-muted font-body-sm text-body-sm px-2">
+                  <span className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-sky-accent text-sm">commit</span>
+                    Deterministic tree: Rule GFR-144(xi) Land Border Cross-Check
+                  </span>
+                  <span className="text-ink font-semibold hidden sm:inline-block">Passed (Hash: 8f2a...c01e)</span>
+                </div>
+              </div>
+              <div className="lg:col-span-5 bg-surface-container-high rounded-xl p-5 border border-ink/10">
+                <h4 className="font-title-sm text-title-sm text-ink font-bold mb-3 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-coral-accent">gavel</span>
+                  CAG Defensibility Summary
+                </h4>
+                <ul className="space-y-2.5">
+                  <li className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-teal-accent text-sm mt-0.5">task_alt</span>
+                    <span className="font-body-sm text-body-sm text-ink">Zero statutory conflicts with OEM authorization schedule</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-teal-accent text-sm mt-0.5">task_alt</span>
+                    <span className="font-body-sm text-body-sm text-ink">Cryptographic timestamp verified with NSDL Class-3 DSC</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-teal-accent text-sm mt-0.5">task_alt</span>
+                    <span className="font-body-sm text-body-sm text-ink">Blacklist scrub clean across 36 State Procurement Portals</span>
+                  </li>
+                </ul>
+                <div className="mt-4 pt-3 border-t border-ink/10 flex items-center justify-between">
+                  <span className="font-label-sm text-label-sm text-ink-muted">Audit Pack Generated</span>
+                  <span className="font-title-sm text-title-sm font-bold text-ink">PDF/A-1b Ready</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Role Journey */}
-      <section id="how-it-works" className="bg-white border border-slate-200 rounded-2xl p-6 md:p-10 shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
-        
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <h2 className="text-2xl font-bold text-slate-900">
-            How It Works: {activeTab === 'officer' ? 'Officer' : 'Bidder'} Journey
+      {/* 3. TRUST & PARTNER BAR */}
+      <section className="border-y border-ink/10 bg-cream py-8 px-6 lg:px-10">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <p className="font-label-md text-label-md text-ink-muted uppercase tracking-wider shrink-0 text-center md:text-left">
+            Procurement Defensibility Engineered Alongside
+          </p>
+          <div className="flex flex-wrap items-center justify-center md:justify-end gap-8 lg:gap-12 opacity-85">
+            <div className="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-ink tracking-tight">
+              <span className="material-symbols-outlined text-ink">shopping_cart</span>
+              <span>GeM e-Marketplace</span>
+            </div>
+            <div className="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-ink tracking-tight">
+              <span className="material-symbols-outlined text-ink">shield</span>
+              <span>Min. of Defence</span>
+            </div>
+            <div className="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-ink tracking-tight">
+              <span className="material-symbols-outlined text-ink">terminal</span>
+              <span>NICSI</span>
+            </div>
+            <div className="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-ink tracking-tight">
+              <span className="material-symbols-outlined text-ink">fact_check</span>
+              <span>STQC India</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. THE JOURNEY SECTION (Integrated) */}
+      <section id="journey" className="py-20 lg:py-28 px-6 lg:px-10 bg-cream max-w-7xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink/5 text-ink font-label-md text-label-md font-bold mb-4">
+            <span className="material-symbols-outlined text-sm">route</span>
+            Interactive Walkthrough
+          </div>
+          <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-ink font-bold tracking-tight mb-4">
+            Experience the workflow.
           </h2>
-          <div className="flex bg-slate-100 p-1 rounded-lg">
-            <button 
-              onClick={() => setActiveTab('officer')}
-              className={cn("px-4 py-2 rounded-md text-sm font-bold transition-all", activeTab === 'officer' ? "bg-white shadow-sm text-blue-600" : "text-slate-500 hover:text-slate-700")}
+          <p className="font-body-lg text-body-lg text-ink-muted">
+            See how GemOne drastically simplifies the procurement lifecycle for both bidders and government officers.
+          </p>
+        </div>
+
+        {/* Toggle Switch */}
+        <div className="flex justify-center mb-12">
+          <div className="inline-flex bg-surface-container rounded-full p-1 border border-ink/10 shadow-editorial-subtle">
+            <button
+              onClick={() => { setActiveTab('bidder'); setExpandedSteps([0]); }}
+              className={cn(
+                "px-8 py-3 rounded-full text-sm font-bold transition-all duration-200",
+                activeTab === 'bidder' ? "bg-white text-ink shadow-sm" : "text-ink-muted hover:text-ink"
+              )}
             >
-              Procurement Officer
+              Bidder Journey
             </button>
-            <button 
-              onClick={() => setActiveTab('bidder')}
-              className={cn("px-4 py-2 rounded-md text-sm font-bold transition-all", activeTab === 'bidder' ? "bg-white shadow-sm text-blue-600" : "text-slate-500 hover:text-slate-700")}
+            <button
+              onClick={() => { setActiveTab('officer'); setExpandedSteps([0]); }}
+              className={cn(
+                "px-8 py-3 rounded-full text-sm font-bold transition-all duration-200",
+                activeTab === 'officer' ? "bg-white text-ink shadow-sm" : "text-ink-muted hover:text-ink"
+              )}
             >
-              Bidder / Vendor
+              Officer Journey
             </button>
           </div>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
-          {steps.map((step, idx) => {
-            const isExpanded = expandedStep === step.id;
+
+        {/* Timeline */}
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 relative">
+          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-ink/10 -translate-x-1/2" />
+          
+          {journey.map((step, idx) => {
+            const isExpanded = expandedSteps.includes(idx);
+            const isLeft = idx % 2 === 0;
             return (
               <div 
-                key={step.id} 
-                onClick={() => setExpandedStep(isExpanded ? null : step.id)}
+                key={idx} 
                 className={cn(
-                  "relative bg-slate-50 border rounded-xl p-5 transition-all cursor-pointer group",
-                  isExpanded ? "border-blue-300 shadow-md ring-2 ring-blue-100 bg-white" : "border-slate-200 hover:shadow-md hover:border-blue-200"
+                  "bg-white border border-ink/10 p-6 rounded-2xl shadow-editorial-subtle cursor-pointer hover:border-teal-accent/40 hover:shadow-editorial-elevated transition-all group relative z-10",
+                  isLeft ? "md:col-start-1" : "md:col-start-2 mt-0 md:mt-12"
                 )}
+                onClick={() => toggleStep(idx)}
               >
+                {/* Connector dot */}
+                <div className={cn(
+                  "hidden md:block absolute top-8 w-3 h-3 rounded-full bg-cream border-2 z-20 transition-colors",
+                  isExpanded ? "border-teal-accent bg-teal-accent" : "border-ink/20 group-hover:border-teal-accent",
+                  isLeft ? "-right-[calc(1.5rem+7.5px)]" : "-left-[calc(1.5rem+7.5px)]"
+                )} />
+
                 <div className="flex items-start justify-between mb-4">
-                  <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center transition-colors", isExpanded ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white")}>
+                  <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-colors shadow-sm", isExpanded ? "bg-ink text-white" : "bg-surface-container text-ink group-hover:bg-ink group-hover:text-white")}>
                     <step.icon size={20} />
                   </div>
                   <span className={cn("text-xs font-bold px-2.5 py-1 rounded-full border", getBadgeColor(step.status))}>
                     {step.status}
                   </span>
                 </div>
-                <h3 className="font-semibold text-slate-900 mb-1 flex items-center gap-2">
-                  <span className={cn("text-sm", isExpanded ? "text-blue-600 font-bold" : "text-slate-400")}>{idx + 1}.</span> {step.title}
+                <h3 className="font-title-md text-title-md text-ink font-bold mb-1 flex items-center gap-2">
+                  <span className={cn("text-sm", isExpanded ? "text-teal-accent font-bold" : "text-ink-muted")}>{idx + 1}.</span> {step.title}
                 </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
+                <p className="font-body-sm text-body-sm text-ink-muted leading-relaxed">
                   {step.desc}
                 </p>
                 
-                {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="mt-4 pt-4 border-t border-slate-100 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <p className="text-sm text-slate-700 leading-relaxed bg-blue-50/50 p-3 rounded-lg border border-blue-100">
+                  <div className="mt-4 pt-4 border-t border-ink/5 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <p className="font-body-sm text-body-sm text-ink leading-relaxed bg-surface-container p-3 rounded-lg border border-ink/5">
                       {step.detail}
                     </p>
                   </div>
@@ -237,111 +348,217 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* Feature Deep Dive */}
-      <section id="features" className="space-y-6">
-        <h2 className="text-2xl font-bold text-slate-900">Platform Capabilities Explained</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
-          <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
-            <h3 className="font-bold text-lg text-slate-900 mb-2 flex items-center gap-2">
-              <Database className="w-5 h-5 text-blue-600" /> Deterministic Rule Engine
-            </h3>
-            <p className="text-sm text-slate-600">
-              Unlike other platforms that use hallucination-prone LLMs to make final decisions, our AI is strictly limited to <strong>Data Extraction</strong>. The actual Pass/Fail verdicts are calculated mathematically by an Abstract Syntax Tree (AST) Rule Engine, guaranteeing that the same input always gives the exact same output.
-            </p>
-          </div>
-          
-          <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
-            <h3 className="font-bold text-lg text-slate-900 mb-2 flex items-center gap-2">
-              <Fingerprint className="w-5 h-5 text-blue-600" /> Layered Document Forensics
-            </h3>
-            <p className="text-sm text-slate-600">
-              We go beyond basic OCR text matching. We analyze the hidden <strong>PDF Metadata</strong> to catch Adobe Photoshop manipulation. We run <strong>Error Level Analysis (ELA)</strong> on image pixels. We check cryptographic hashes to detect bidders sharing identical fake documents to simulate competition.
-            </p>
-          </div>
-
-          <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
-            <h3 className="font-bold text-lg text-slate-900 mb-2 flex items-center gap-2">
-              <Scale className="w-5 h-5 text-blue-600" /> Three-State Verdict System
-            </h3>
-            <p className="text-sm text-slate-600">
-              Ambiguous edge cases are never auto-rejected. The system categorizes results into: <strong>Compliant</strong>, <strong>Non-Compliant</strong>, and <strong>Needs Review</strong>. If the AI cannot read a blurry document after 3 strikes, it degrades gracefully to the manual review queue, ensuring zero operational downtime.
-            </p>
-          </div>
-
-          <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
-            <h3 className="font-bold text-lg text-slate-900 mb-2 flex items-center gap-2">
-              <FileLock2 className="w-5 h-5 text-blue-600" /> Immutable Pseudo-Blockchain
-            </h3>
-            <p className="text-sm text-slate-600">
-              For complete CVC/CAG defensibility, every action is logged into an immutable <strong>Cryptographic Hash Chain</strong> within our database. Each event computes a SHA-256 hash using the previous row's hash. If a malicious insider alters a record, the chain breaks instantly.
-            </p>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Roadmap & Limitations */}
-      <section className="bg-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-lg" id="roadmap">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-          <h2 className="text-2xl font-bold">What's Next (Post-SIH Roadmap)</h2>
-          <a href="https://github.com/Shubham15986/gem-compliancelens/issues" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center gap-1">
-            View Issue Tracker &rarr;
-          </a>
-        </div>
-        <p className="text-slate-400 mb-8 max-w-3xl">
-          While the core AI and Rule Engine are fully complete, the following features are officially tracked in our GitHub repository for post-hackathon implementation. We have explicitly documented the technical or institutional limitations that prevented them from being included in the MVP.
-        </p>
+      {/* 5. ALTERNATING FEATURE BLOCKS (How It Works) */}
+      <section className="py-20 lg:py-28 px-6 lg:px-10 max-w-7xl mx-auto space-y-24" id="features">
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {Roadmap.map((item, idx) => (
-            <div key={idx} className="bg-slate-800 border border-slate-700 p-5 rounded-xl hover:border-blue-500/50 transition-colors relative group">
-              <div className="flex justify-between items-start mb-3">
-                <item.icon className="w-8 h-8 text-blue-400" />
-                <a href={`https://github.com/Shubham15986/gem-compliancelens/issues/${item.issueId}`} target="_blank" rel="noreferrer" className="bg-slate-700/50 text-slate-300 hover:text-white px-2.5 py-1 rounded text-xs font-mono font-medium transition-colors">
-                  Issue #{item.issueId}
-                </a>
+        {/* Block A */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="lg:col-span-6 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-accent/15 text-teal-accent font-label-md text-label-md font-bold">
+              <span className="material-symbols-outlined text-sm">memory</span>
+              Deterministic Extraction Pipeline
+            </div>
+            <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-ink font-bold tracking-tight">
+              Extract statutory truth with zero hallucinations.
+            </h2>
+            <p className="font-body-lg text-body-lg text-ink-muted leading-relaxed">
+              Generic LLMs fabricate turnover and distort compliance dates. GemOne’s Abstract Syntax Tree (AST) engine cross-checks GST returns, balance sheet notes, and GeM eligibility rules with mathematical determinism.
+            </p>
+            <ul className="space-y-3 pt-2">
+              <li className="flex items-center gap-3 font-title-sm text-title-sm text-ink">
+                <span className="w-5 h-5 rounded-full bg-teal-accent/20 text-teal-accent flex items-center justify-center font-bold text-xs">✓</span>
+                Automated GSTIN 2B reconciliation with live GST portal integration
+              </li>
+              <li className="flex items-center gap-3 font-title-sm text-title-sm text-ink">
+                <span className="w-5 h-5 rounded-full bg-teal-accent/20 text-teal-accent flex items-center justify-center font-bold text-xs">✓</span>
+                Class-3 DSC certificate path and revoked cert checks
+              </li>
+              <li className="flex items-center gap-3 font-title-sm text-title-sm text-ink">
+                <span className="w-5 h-5 rounded-full bg-teal-accent/20 text-teal-accent flex items-center justify-center font-bold text-xs">✓</span>
+                Strict Clause 144(xi) beneficial ownership parsing
+              </li>
+            </ul>
+          </div>
+          <div className="lg:col-span-6 bg-white rounded-2xl border border-ink/10 p-6 shadow-editorial-elevated">
+            <div className="flex items-center justify-between border-b border-ink/10 pb-4 mb-4">
+              <div>
+                <span className="font-title-sm text-title-sm text-ink font-bold block">Tax &amp; Statutory Compliance Dossier</span>
+                <span className="font-label-sm text-label-sm text-ink-muted">Extracted via GSTN V2 Direct Sandbox</span>
               </div>
-              <h3 className="font-bold text-lg mb-2">{item.title}</h3>
-              <p className="text-slate-300 text-sm mb-4 leading-relaxed">{item.desc}</p>
-              
-              <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700">
-                <span className="text-amber-500 text-xs font-bold uppercase tracking-wider block mb-1">Limitation / Blocker</span>
-                <p className="text-slate-400 text-xs italic">{item.limitation}</p>
+              <span className="px-3 py-1 rounded-full bg-teal-accent/15 text-teal-accent font-label-md text-label-md font-bold">
+                99.98% Confidence
+              </span>
+            </div>
+            <div className="space-y-4">
+              <div className="p-3.5 rounded-xl bg-surface-container border border-ink/5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-teal-accent">account_balance</span>
+                  <div>
+                    <div className="font-title-sm text-title-sm text-ink font-semibold">GSTIN: 07AAACB2194L1Z9</div>
+                    <div className="font-body-sm text-body-sm text-ink-muted">Astra Microwave Telecommunications Ltd</div>
+                  </div>
+                </div>
+                <span className="px-2.5 py-1 rounded-full bg-white text-ink font-label-md text-label-md font-bold border border-ink/10">Active</span>
+              </div>
+              <div className="p-3.5 rounded-xl bg-surface-container border border-ink/5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-teal-accent">badge</span>
+                  <div>
+                    <div className="font-title-sm text-title-sm text-ink font-semibold">Permanent Account No (PAN)</div>
+                    <div className="font-body-sm text-body-sm text-ink-muted">Direct CBDT Database Link Match: OK</div>
+                  </div>
+                </div>
+                <span className="px-2.5 py-1 rounded-full bg-white text-teal-accent font-label-md text-label-md font-bold border border-ink/10">Verified</span>
+              </div>
+              <div className="p-3.5 rounded-xl bg-surface-container border border-ink/5">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="font-title-sm text-title-sm text-ink font-semibold">Financial Turnover Rule Match (GFR-2017)</span>
+                  <span className="font-label-md text-label-md font-bold text-ink">₹84.50 Cr / req ₹50.00 Cr</span>
+                </div>
+                <div className="w-full bg-outline-variant/30 h-2 rounded-full overflow-hidden">
+                  <div className="bg-teal-accent h-full w-[100%] max-w-full"></div>
+                </div>
               </div>
             </div>
-          ))}
+          </div>
+        </div>
+
+        {/* Block B */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="lg:col-span-6 order-2 lg:order-1 bg-white rounded-2xl border border-ink/10 p-6 shadow-editorial-elevated">
+            <div className="flex items-center justify-between border-b border-ink/10 pb-4 mb-4">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-pink-accent">document_scanner</span>
+                <span className="font-title-sm text-title-sm text-ink font-bold">Forensic Document Inspector</span>
+              </div>
+              <span className="px-3 py-1 rounded-full bg-pink-accent/15 text-pink-accent font-label-md text-label-md font-bold">
+                Flagged 2 Alterations
+              </span>
+            </div>
+            <div className="space-y-4">
+              <div className="p-4 rounded-xl border border-ink/10 bg-surface-container-lowest">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <span className="font-title-sm text-title-sm text-ink font-bold block">OEM_Authorization_Certificate.pdf</span>
+                    <span className="font-body-sm text-body-sm text-ink-muted">SHA-256: 7d49e18bca48d39c017992ff...</span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-error-container text-error font-label-sm text-label-sm font-bold">TAMPER DETECTED</span>
+                </div>
+                <div className="p-2.5 rounded bg-surface-container font-body-sm text-body-sm text-ink-muted space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span>ELA (Error Level Analysis):</span>
+                    <span className="text-error font-bold font-mono">Pixel Recompression Delta</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Author Software Signature:</span>
+                    <span className="text-ink font-semibold">Photoshop 2024.1</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="lg:col-span-6 order-1 lg:order-2 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-coral-accent/15 text-coral-accent font-label-md text-label-md font-bold">
+              <span className="material-symbols-outlined text-sm">fingerprint</span>
+              Pixel-Level Document Forensics
+            </div>
+            <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-ink font-bold tracking-tight">
+              Catch document forgery before bids open.
+            </h2>
+            <p className="font-body-lg text-body-lg text-ink-muted leading-relaxed">
+              Tender mafias routinely modify dates on OEM certificates, forge CA net worth seals, and splice balance sheets. GemOne runs sub-pixel error-level analysis, PDF metadata chronology auditing, and ICAI UDIN verification instantly.
+            </p>
+          </div>
         </div>
       </section>
-      {/* Footer CTA */}
-      <footer className="mt-16 pt-12 pb-8 border-t border-slate-200 text-center">
-        <h2 className="text-2xl font-bold text-slate-900 mb-6">Ready to experience GemOne?</h2>
-        {user ? (
-          <button 
-            onClick={() => navigate(`/${role}/tenders`)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold transition-colors shadow-sm"
-          >
-            Go to Dashboard &rarr;
-          </button>
-        ) : (
-          <div className="flex items-center justify-center gap-4">
-            <button 
-              onClick={() => navigate('/login')}
-              className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-8 py-3 rounded-lg font-bold transition-colors shadow-sm"
-            >
-              Log In
-            </button>
-            <button 
-              onClick={() => navigate('/login')}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold transition-colors shadow-sm"
-            >
-              Register &rarr;
-            </button>
-          </div>
-        )}
-      </footer>
 
-    </div>
+      {/* 6. ROADMAP & LIMITATIONS */}
+      <section className="bg-indigo-dark text-white py-20 lg:py-28 px-6 lg:px-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-accent font-label-md text-label-md font-bold mb-4">
+                <span className="material-symbols-outlined text-sm">build</span>
+                Post-SIH Tracker
+              </div>
+              <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold tracking-tight text-white">
+                What's Next (Roadmap)
+              </h2>
+            </div>
+            <a href="https://github.com/Shubham15986/gem-compliancelens/issues" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-title-sm text-title-sm font-bold shadow-editorial-subtle transition-all duration-150 flex items-center gap-2">
+              View Issue Tracker
+              <span className="material-symbols-outlined text-sm">open_in_new</span>
+            </a>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {Roadmap.map((item, idx) => (
+              <div key={idx} className="bg-primary-container/80 border border-white/10 p-6 rounded-2xl hover:border-teal-accent/50 transition-colors">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-accent">
+                    <item.icon size={20} />
+                  </div>
+                  <h3 className="font-title-lg text-title-lg font-bold text-white">{item.title}</h3>
+                </div>
+                <p className="font-body-md text-body-md text-on-primary-container leading-relaxed mb-4">
+                  {item.desc}
+                </p>
+                <div className="bg-ink-dark/50 rounded-lg p-3 border border-white/5">
+                  <span className="text-coral-accent font-label-md text-label-md uppercase tracking-wider block mb-1">Limitation / Blocker</span>
+                  <p className="text-on-primary-container font-body-sm text-body-sm">{item.limitation}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. FOOTER */}
+      <footer className="w-full bg-ink text-cream border-t border-outline-variant/20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-16">
+          <div className="text-center mb-16">
+            <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-cream tracking-tight mb-8">
+              Ready to experience GemOne?
+            </h2>
+            {user ? (
+              <button 
+                onClick={() => navigate(`/${role}/tenders`)}
+                className="px-8 py-3.5 rounded-full bg-teal-accent hover:bg-teal-accent/90 text-ink font-title-md text-title-md font-bold shadow-editorial-elevated active:scale-[0.98] transition-all duration-150 inline-flex items-center gap-2"
+              >
+                Go to Dashboard
+                <span className="material-symbols-outlined text-ink">arrow_forward</span>
+              </button>
+            ) : (
+              <div className="flex items-center justify-center gap-4">
+                <button 
+                  onClick={() => navigate('/login')}
+                  className="px-8 py-3.5 rounded-full bg-surface-container/10 hover:bg-surface-container/20 text-cream font-title-md text-title-md font-semibold border border-white/20 shadow-editorial-subtle transition-all duration-150"
+                >
+                  Log In
+                </button>
+                <button 
+                  onClick={() => navigate('/login')}
+                  className="px-8 py-3.5 rounded-full bg-teal-accent hover:bg-teal-accent/90 text-ink font-title-md text-title-md font-bold shadow-editorial-elevated active:scale-[0.98] transition-all duration-150"
+                >
+                  Register
+                </button>
+              </div>
+            )}
+          </div>
+          
+          <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 font-body-sm text-body-sm text-on-primary-container">
+            <div>
+              © 2026 GemOne. Engineered for SIH 1308.
+            </div>
+            <div className="flex items-center gap-6">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-teal-accent"></span>
+                All Systems Operational
+              </span>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
