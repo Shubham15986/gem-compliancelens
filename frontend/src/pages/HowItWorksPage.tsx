@@ -89,7 +89,7 @@ export default function HowItWorksPage() {
               How It Works
             </a>
             <a className="text-ink-muted font-title-sm text-title-sm font-medium hover:text-ink transition-colors duration-150 flex items-center gap-1" href="#sih-requirements" onClick={(e) => handleNav(e, '/sih-compliance')}>
-              SIH 1308 Requirements
+              SIH Requirements
             </a>
           </nav>
 
@@ -130,7 +130,7 @@ export default function HowItWorksPage() {
           </h1>
           
           <p className="font-body-lg text-body-lg text-ink-muted max-w-2xl mx-auto mb-10 leading-relaxed">
-            GemOne turns complex tender documents, GST filings, and statutory checks into instant, CAG-defensible compliance verdicts for SIH 1308.
+            GemOne turns complex tender documents, GST filings, and statutory checks into instant, CAG-defensible compliance verdicts for SIH.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
@@ -678,7 +678,7 @@ export default function HowItWorksPage() {
           
           <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 font-body-sm text-body-sm text-on-primary-container">
             <div>
-              © 2026 GemOne. Engineered for SIH 1308.
+              © 2026 GemOne. Engineered for SIH.
             </div>
             <div className="flex items-center gap-6">
               <span className="flex items-center gap-1.5">
