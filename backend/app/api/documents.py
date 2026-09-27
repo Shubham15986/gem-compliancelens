@@ -143,10 +143,14 @@ async def upload_document(
     except HTTPException as he:
         raise he
     except Exception as e:
+        import traceback
+        err_msg = traceback.format_exc()
+        print(f"UPLOAD ERROR: {err_msg}")
         msg = str(e)
         if "api_key" in msg.lower() or "configure cloudinary" in msg.lower() or "invalid" in msg.lower():
             msg = f"Cloudinary error: {msg}. Please check your CLOUDINARY_URL format in Render (it should be cloudinary://API_KEY:API_SECRET@CLOUD_NAME)."
-        raise HTTPException(status_code=500, detail=msg)
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=500, content={"detail": msg, "traceback": err_msg}, headers={"Access-Control-Allow-Origin": "*"})
 
 @router.post("/{id}/authenticity")
 async def check_authenticity(id: str, db: AsyncSession = Depends(get_db)):

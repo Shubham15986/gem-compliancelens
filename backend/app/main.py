@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy import text
@@ -35,3 +36,14 @@ app.include_router(bidders.router, prefix="/api/v1/bidders", tags=["bidders"])
 app.include_router(self_check.router, prefix="/api/v1/self-check", tags=["self-check"])
 app.include_router(clarifications.router, prefix="/api/v1/clarifications", tags=["clarifications"])
 app.include_router(notifications.router, prefix="/api/v1/notifications", tags=["notifications"])
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    import traceback
+    err_msg = traceback.format_exc()
+    print(f"GLOBAL ERROR: {err_msg}")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": str(exc), "traceback": err_msg},
+        headers={"Access-Control-Allow-Origin": "*"}
+    )
