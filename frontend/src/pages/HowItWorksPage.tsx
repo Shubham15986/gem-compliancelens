@@ -53,11 +53,11 @@ export default function HowItWorksPage() {
     { id: 5, title: 'Generate Audit Report', desc: 'Export the final decision ledger.', detail: 'Export a CVC-compliant JSON/PDF report proving exactly why a bidder was rejected (e.g. "Rule 4.2 failed: Turnover was 40L, required 50L").', icon: CheckCircle, status: 'Live' }
   ];
 
-  const Roadmap = [
-    { issueId: 18, title: 'Advanced Pixel Forgery Detection', desc: 'Implement Error Level Analysis (ELA) to detect Photoshop tampering in GST certificates.', limitation: 'Requires heavy GPU compute limits on standard free-tier hosting.', icon: Fingerprint },
-    { issueId: 21, title: 'DigiLocker Direct API Integration', desc: 'Fetch verified documents directly from Gov APIs instead of PDF uploads.', limitation: 'Requires authorized production API keys from MeitY, unavailable for hackathon use.', icon: Server },
-    { issueId: 24, title: 'Blockchain Smart Contracts', desc: 'Migrate the current pseudo-hash-chain to an actual Hyperledger Fabric network.', limitation: 'Deployment complexity of a full blockchain network exceeded the MVP time constraints.', icon: LinkIcon },
-    { issueId: 29, title: 'MCA21 Database Sync', desc: 'Auto-verify company director backgrounds against Ministry of Corporate Affairs.', limitation: 'Third-party API rate limits and lack of public sandbox environments.', icon: Briefcase }
+  const RoiData = [
+    { title: '70–95% Per-Bidder Cost Reduction', desc: 'Manual verification costs ₹450–1,200 per bidder. GemOne reduces this to ₹141–305 for new bidders, and ₹11–45 for returning bidders using the Compliance Vault.', limitation: 'Based on 45-90 min manual officer time vs automated API checks.', icon: Zap },
+    { title: 'Projected Annual Savings (68%)', desc: 'For an illustrative 1,000 bidders/year, manual costs run ₹8.25L. GemOne reduces this to ₹2.6L (including infrastructure), saving ≈ ₹5.6L annually per CPSE.', limitation: 'Scales linearly across 8-10 CPSEs to ₹45-55 Lakh in group savings.', icon: Scale },
+    { title: 'Modest Production Infrastructure', desc: 'Pilot scale infrastructure runs at just ₹4,000–12,000/month using paid tiers (Render, Supabase, commercial KYC APIs).', limitation: 'Breaks even within the first month after just 15-30 verified bidders.', icon: Server },
+    { title: 'Indirect Vigilance Risk Avoidance', desc: 'Eliminates wrongful disqualification litigation, reduces CVC audit risk via SHA-256 hash chains, and blocks spam via private cryptographic tender passwords.', limitation: 'Indirect costs not included in the primary ₹5.6L savings projection.', icon: ShieldAlert }
   ];
 
   const getBadgeColor = (status: string) => {
@@ -471,7 +471,6 @@ export default function HowItWorksPage() {
           </div>
         </div>
       </section>
-      </section>
 
       {/* 5B. THE 3-STATE VERDICT MACHINE & VAULT (Additional Features) */}
       <section className="bg-cream py-20 lg:py-28 px-6 lg:px-10">
@@ -602,27 +601,23 @@ export default function HowItWorksPage() {
         </svg>
       </div>
 
-      {/* 6. ROADMAP & LIMITATIONS */}
+      {/* 6. ECONOMIC IMPACT & ROI */}
       <section className="bg-indigo-dark text-white py-20 lg:py-28 px-6 lg:px-10">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-accent font-label-md text-label-md font-bold mb-4">
-                <span className="material-symbols-outlined text-sm">build</span>
-                Post-SIH Tracker
+                <span className="material-symbols-outlined text-sm">trending_down</span>
+                SIH 26100 Economic Impact
               </div>
               <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold tracking-tight text-white">
-                What's Next (Roadmap)
+                Return On Investment (ROI)
               </h2>
             </div>
-            <a href="https://github.com/Shubham15986/gem-compliancelens/issues" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-title-sm text-title-sm font-bold shadow-editorial-subtle transition-all duration-150 flex items-center gap-2">
-              View Issue Tracker
-              <span className="material-symbols-outlined text-sm">open_in_new</span>
-            </a>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {Roadmap.map((item, idx) => (
+            {RoiData.map((item, idx) => (
               <div key={idx} className="bg-primary-container/80 border border-white/10 p-6 rounded-2xl hover:border-teal-accent/50 transition-colors">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-accent">
@@ -634,7 +629,7 @@ export default function HowItWorksPage() {
                   {item.desc}
                 </p>
                 <div className="bg-ink-dark/50 rounded-lg p-3 border border-white/5">
-                  <span className="text-coral-accent font-label-md text-label-md uppercase tracking-wider block mb-1">Limitation / Blocker</span>
+                  <span className="text-coral-accent font-label-md text-label-md uppercase tracking-wider block mb-1">Financial Basis</span>
                   <p className="text-on-primary-container font-body-sm text-body-sm">{item.limitation}</p>
                 </div>
               </div>
