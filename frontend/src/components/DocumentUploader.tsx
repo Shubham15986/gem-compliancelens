@@ -109,7 +109,7 @@ export default function DocumentUploader({ bidderId, allowedDocTypes, onUploadCo
                 type="file" 
                 accept=".pdf,image/png,image/jpeg"
                 onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50"
                 disabled={isUploading}
               />
             )}
@@ -118,7 +118,7 @@ export default function DocumentUploader({ bidderId, allowedDocTypes, onUploadCo
               <div className="flex flex-col items-center justify-center space-y-4 py-2">
                 <div className="relative w-16 h-16 rounded-xl bg-blue-100 flex items-center justify-center border-2 border-blue-200 overflow-hidden shadow-inner">
                   <UploadCloud className="w-8 h-8 text-blue-600 relative z-10" />
-                  {/* Scanning line animation */}
+                  <div className="absolute left-0 right-0 h-1 bg-teal-400 shadow-[0_0_8px_2px_rgba(45,212,191,0.6)] animate-scan z-20"></div>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="flex items-center gap-2 text-blue-700 font-semibold">
@@ -129,7 +129,7 @@ export default function DocumentUploader({ bidderId, allowedDocTypes, onUploadCo
                 </div>
               </div>
             ) : file ? (
-              <div className="text-blue-600 font-medium">{file.name}</div>
+              <div className="flex flex-col items-center"><div className="text-blue-600 font-medium font-mono text-lg">{file.name}</div><div className="text-slate-400 text-xs mt-2 font-medium bg-slate-100 px-3 py-1 rounded-full group-hover:bg-slate-200 transition">Click to replace file</div></div>
             ) : (
               <div className="flex flex-col items-center gap-2 text-slate-500">
                 <UploadCloud className="w-8 h-8 text-slate-400" />

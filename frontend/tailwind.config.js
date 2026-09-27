@@ -6,6 +6,16 @@ export default {
   ],
   theme: {
     extend: {
+
+      keyframes: {
+        scan: {
+          '0%, 100%': { top: '0%' },
+          '50%': { top: '100%' },
+        }
+      },
+      animation: {
+        scan: 'scan 2s ease-in-out infinite',
+      },
       colors: {
         // App functional variables mapped to Stitch
         brand: '#15023f',
